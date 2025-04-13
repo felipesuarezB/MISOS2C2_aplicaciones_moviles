@@ -10,6 +10,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.viniloapp.models.Album
+import com.example.viniloapp.models.Collector
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -41,15 +42,17 @@ class NetworkServiceAdapter constructor(context: Context) {
                     val list = mutableListOf<Album>()
                     for (i in 0 until resp.length()) {
                         val item = resp.getJSONObject(i)
-                        list.add(Album(
-                            id = item.getInt("id"),
-                            name = item.getString("name"),
-                            cover = item.getString("cover"),
-                            recordLabel = item.getString("recordLabel"),
-                            releaseDate = item.getString("releaseDate"),
-                            genre = item.getString("genre"),
-                            description = item.getString("description")
-                        ))
+                        list.add(
+                            Album(
+                                id = item.getInt("id"),
+                                name = item.getString("name"),
+                                cover = item.getString("cover"),
+                                recordLabel = item.getString("recordLabel"),
+                                releaseDate = item.getString("releaseDate"),
+                                genre = item.getString("genre"),
+                                description = item.getString("description")
+                            )
+                        )
                     }
                     onComplete(list)
                 } catch (e: Exception) {
@@ -59,6 +62,33 @@ class NetworkServiceAdapter constructor(context: Context) {
             },
             { error ->
                 Log.e("NetworkServiceAdapter", "Error fetching albums", error)
+                onError(error)
+            }))
+    }
+
+    fun getCollectors(onComplete: (resp: List<Collector>) -> Unit, onError: (error: VolleyError) -> Unit) {
+        requestQueue.add(getRequest("collectors",
+            { response ->
+                try {
+                    val resp = JSONArray(response)
+                    val list = mutableListOf<Collector>()
+                    for (i in 0 until resp.length()) {
+                        val item = resp.getJSONObject(i)
+                        list.add(Collector(
+                            id = item.getInt("id"),
+                            name = item.getString("name"),
+                            telephone = item.getString("telephone"),
+                            email = item.getString("email")
+                        ))
+                    }
+                    onComplete(list)
+                } catch (e: Exception) {
+                    Log.e("NetworkServiceAdapter", "Error parsing collectors", e)
+                    onError(VolleyError(e))
+                }
+            },
+            { error ->
+                Log.e("NetworkServiceAdapter", "Error fetching collectors", error)
                 onError(error)
             }))
     }

@@ -1,6 +1,8 @@
 package com.example.viniloapp
 
 import android.app.Application
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 
 class MyApplication : Application() {
     companion object {
@@ -12,7 +14,6 @@ class MyApplication : Application() {
     }
 
     override fun onCreate() {
-        super.onCreate()
         instance = this
     }
-} 
+}

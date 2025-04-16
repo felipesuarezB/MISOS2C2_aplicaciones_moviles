@@ -108,7 +108,6 @@ class NetworkServiceAdapter constructor(context: Context) {
             { response ->
                 try {
                     val item = JSONObject(response)
-
                     // Parse básico del Collector
                     val collector = Collector(
                         id = item.getInt("id"),
@@ -116,7 +115,6 @@ class NetworkServiceAdapter constructor(context: Context) {
                         telephone = item.getString("telephone"),
                         email = item.getString("email")
                     )
-
                     // Parse de Comments
                     val commentsJson = item.getJSONArray("comments")
                     val comments = mutableListOf<Comment>()
@@ -141,7 +139,8 @@ class NetworkServiceAdapter constructor(context: Context) {
                                 id = performerObj.getInt("id"),
                                 name = performerObj.getString("name"),
                                 image = performerObj.getString("image"),
-                                description = performerObj.getString("description")
+                                description = performerObj.getString("description"),
+                                birthDate = performerObj.getString("birthDate")
                             )
                         )
                     }
@@ -151,29 +150,22 @@ class NetworkServiceAdapter constructor(context: Context) {
                     val collectorAlbums = mutableListOf<CollectorAlbum>()
                     for (i in 0 until albumsJson.length()) {
                         val albumObj = albumsJson.getJSONObject(i)
-                        val albumInfo = albumObj.getJSONObject("album")
 
                         collectorAlbums.add(
                             CollectorAlbum(
                                 id = albumObj.getInt("id"),
-                                status = albumObj.getString("status"),
-                                price = albumObj.getDouble("price"),
-                                album = Album(
-                                    id = albumInfo.getInt("id"),
-                                    name = albumInfo.getString("name"),
-                                    cover = albumInfo.getString("cover"),
-                                    releaseDate = albumInfo.getString("releaseDate"),
-                                    description = albumInfo.getString("description"),
-                                    genre = albumInfo.getString("genre"),
-                                    recordLabel = albumInfo.getString("recordLabel")
-                                )
+                                price = albumObj.getInt("price"),
+                                status = albumObj.getString("status")
+
                             )
                         )
                     }
 
                     val collectorDetail = CollectorDetail(
                         id = collector.id,
-                        collector = collector,
+                        name = collector.name,
+                        telephone = collector.telephone,
+                        email = collector.email,
                         comments = comments,
                         favoritePerformers = performers,
                         collectorAlbums = collectorAlbums

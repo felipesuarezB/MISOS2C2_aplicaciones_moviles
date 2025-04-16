@@ -33,14 +33,16 @@ class CollectorDetailFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CollectorDetailViewModel::class.java)
 
-        // Mostrar el ProgressBar
+
         binding.progressBar.visibility = View.VISIBLE
+
+        val collectorId = arguments?.getInt("collectorId") ?: return
+
+        viewModel.loadCollectorDetail(collectorId)
 
         viewModel.collectorDetail.observe(viewLifecycleOwner, Observer { collectorDetail ->
             collectorDetail?.let {
                 binding.collectorDetail = collectorDetail
-
-                // Ocultar el ProgressBar cuando se reciben los datos
                 binding.progressBar.visibility = View.GONE
             }
         })

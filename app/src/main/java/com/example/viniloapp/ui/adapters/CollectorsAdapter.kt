@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -34,7 +35,7 @@ class CollectorsAdapter : ListAdapter<Collector, CollectorsAdapter.CollectorView
             }
 
             view.findNavController().navigate(
-                R.id.action_navigation_collector_detail_to_collectorDetailFragment,
+                R.id.action_navigation_collectors_to_navigation_collector_detail,
                 bundle
             )
         }

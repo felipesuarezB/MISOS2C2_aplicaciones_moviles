@@ -23,7 +23,7 @@
         android:name="com.example.viniloapp.ui.collectors.CollectorListFragment"
         android:label="Coleccionistas" >
             <action
-                android:id="@+id/action_navigation_collector_detail_to_collectorDetailFragment"
+                android:id="@+id/action_navigation_collectors_to_navigation_collector_detail"
                 app:destination="@id/navigation_collector_detail"
                 />
     </fragment>
@@ -32,9 +32,6 @@
         android:id="@+id/navigation_collector_detail"
         android:name="com.example.viniloapp.ui.collectors.CollectorDetailFragment"
         android:label="Collector Detail">
-        <argument
-            android:name="collectorId"
-            app:argType="integer" />
     </fragment>
 
     <fragment

@@ -44,4 +44,5 @@
             android:layout_marginBottom="12dp"/>
 
     </LinearLayout>
+>>>>>>> 4b530df (fix: fixes navigation. Coleccionistas button always lead to collector list)
 </layout>

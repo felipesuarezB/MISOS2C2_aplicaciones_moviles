@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.viniloapp.models.Album
 import com.example.viniloapp.models.Collector
+import com.example.viniloapp.models.CollectorDetail
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -93,10 +94,39 @@ class NetworkServiceAdapter constructor(context: Context) {
             }))
     }
 
-    private fun postRequest(path: String, body: JSONObject,  responseListener: Response.Listener<JSONObject>, errorListener: Response.ErrorListener ):JsonObjectRequest{
-        return  JsonObjectRequest(Request.Method.POST, BASE_URL+path, body, responseListener, errorListener)
+    fun getCollectorDetail(id: Int, onComplete: (CollectorDetail) -> Unit, onError: (error: VolleyError) -> Unit) {
+        requestQueue.add(getRequest("collectors/$id",
+            { response ->
+                try {
+                    val item = JSONObject(response)
+                    val collectorDetail = CollectorDetail(
+                        id = item.getInt("id"),
+                        name = item.getString("name"),
+                        telephone = item.getString("telephone"),
+                        email = item.getString("email"),
+                        // Descomenta y agrega las propiedades cuando decidas implementarlas
+                        // comments = emptyList(),
+                        // favoritePerformers = emptyList(),
+                        // collectorAlbums = emptyList()
+                    )
+                    onComplete(collectorDetail)
+                } catch (e: Exception) {
+                    Log.e("NetworkServiceAdapter", "Error parsing collector details", e)
+                    onError(VolleyError(e))
+                }
+            },
+            { error ->
+                Log.e("NetworkServiceAdapter", "Error fetching collector details", error)
+                onError(error)
+            }
+        ))
     }
-    private fun putRequest(path: String, body: JSONObject,  responseListener: Response.Listener<JSONObject>, errorListener: Response.ErrorListener ):JsonObjectRequest{
-        return  JsonObjectRequest(Request.Method.PUT, BASE_URL+path, body, responseListener, errorListener)
+
+    private fun postRequest(path: String, body: JSONObject, responseListener: Response.Listener<JSONObject>, errorListener: Response.ErrorListener): JsonObjectRequest {
+        return JsonObjectRequest(Request.Method.POST, BASE_URL + path, body, responseListener, errorListener)
+    }
+
+    private fun putRequest(path: String, body: JSONObject, responseListener: Response.Listener<JSONObject>, errorListener: Response.ErrorListener): JsonObjectRequest {
+        return JsonObjectRequest(Request.Method.PUT, BASE_URL + path, body, responseListener, errorListener)
     }
 }

@@ -14,12 +14,19 @@
         android:padding="24dp"
         android:background="#FAFAFA">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
         <TextView
 
             android:id="@+id/collector_detail_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{collectorDetail.name}"
+            android:text='@{"Name: " + collectorDetail.name}'
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#333333"

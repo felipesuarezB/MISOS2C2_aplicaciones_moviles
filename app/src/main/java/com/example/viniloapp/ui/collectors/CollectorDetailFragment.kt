@@ -29,16 +29,21 @@ class CollectorDetailFragment: Fragment() {
 
     }
 
-    override fun onViewCreated(view:View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CollectorDetailViewModel::class.java)
-        viewModel.collectorDetail.observe(viewLifecycleOwner, Observer {
-            collectorDetail ->
+
+        // Mostrar el ProgressBar
+        binding.progressBar.visibility = View.VISIBLE
+
+        viewModel.collectorDetail.observe(viewLifecycleOwner, Observer { collectorDetail ->
             collectorDetail?.let {
                 binding.collectorDetail = collectorDetail
+
+                // Ocultar el ProgressBar cuando se reciben los datos
+                binding.progressBar.visibility = View.GONE
             }
         })
-        // TODO: Add loading symbol to CollectorDetailView along with code to manage it here
     }
 
     override fun onDestroyView() {

@@ -59,6 +59,28 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
         )
     }
 
+    fun loadCollectorDetails(collectorId: Int) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val collectorService = CollectorService()
+                val collectorsList = withContext(Dispatchers.IO) {
+                    collectorService.getCollectors()
+                }
+                val collector = collectorsList.find { it.id == collectorId }
+                if (collector != null) {
+                    _currentCollector.value = collector
+                } else {
+                    _error.value = "Coleccionista no encontrado"
+                }
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Error desconocido"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()

@@ -1,60 +1,69 @@
 package com.example.viniloapp.ui.collectors
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.viniloapp.R
 import com.example.viniloapp.databinding.FragmentCollectorListBinding
-import com.example.viniloapp.ui.adapters.CollectorsAdapter
+import com.example.viniloapp.ui.adapters.CollectorAdapter
 import com.example.viniloapp.viewmodels.CollectorViewModel
 
 class CollectorListFragment : Fragment() {
-    private var _binding:FragmentCollectorListBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var viewModelAdapter: CollectorsAdapter
+
     private lateinit var viewModel: CollectorViewModel
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: CollectorAdapter
+    private lateinit var progressBar: View
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCollectorListBinding.inflate(inflater, container, false)
-        viewModelAdapter = CollectorsAdapter()
-        return binding.root
+    ): View? {
+        return inflater.inflate(R.layout.fragment_collector_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = binding.collectorsRecyclerView
+        Log.d("CollectorListFragment", "onViewCreated iniciado")
+
+        recyclerView = view.findViewById(R.id.collectors_recycler_view)
+        progressBar = view.findViewById(R.id.progress_bar)
+
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = viewModelAdapter
+        adapter = CollectorAdapter()
+        recyclerView.adapter = adapter
 
-        // Setup the ViewModel
-        viewModel = ViewModelProvider(this).get(CollectorViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            CollectorViewModel.Factory(requireActivity().application)
+        )[CollectorViewModel::class.java]
 
-        // Observe the LiveData from the ViewModel and update the RecyclerView adapter
-        viewModel.collectors.observe(viewLifecycleOwner, Observer { collectors ->
-            collectors?.let {
-                viewModelAdapter.submitList(it) // Submit list to the adapter
+        viewModel.collectors.observe(viewLifecycleOwner) { collectors ->
+            Log.d("CollectorListFragment", "Coleccionistas actualizados: ${collectors.size} coleccionistas")
+            adapter.submitList(collectors)
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            Log.d("CollectorListFragment", "Estado de carga: $isLoading")
+            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            if (error.isNotEmpty()) {
+                Log.e("CollectorListFragment", "Error recibido: $error")
+                Toast.makeText(context, error, Toast.LENGTH_LONG).show()
             }
-        })
+        }
 
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            isLoading ->
-                binding.progressBar.visibility = if(isLoading) View.VISIBLE else View.INVISIBLE
-        })
-    }
-
-    override fun onResume() {
-        super.onResume()
+        Log.d("CollectorListFragment", "Iniciando carga de coleccionistas")
         viewModel.loadCollectors()
     }
-
-}
+} 

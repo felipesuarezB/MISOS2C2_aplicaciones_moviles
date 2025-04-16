@@ -1,6 +1,4 @@
-
-/*
- package com.example.viniloapp.ui.collectors
+package com.example.viniloapp.ui.collectors
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +11,3 @@ class CollectorViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 }
-
-
- */

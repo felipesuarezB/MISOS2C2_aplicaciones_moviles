@@ -1,54 +1,31 @@
 package com.example.viniloapp.ui.adapters
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.viniloapp.R
-import com.example.viniloapp.databinding.CollectorItemBinding
+import com.example.viniloapp.databinding.ItemCollectorBinding
 import com.example.viniloapp.models.Collector
 
-
-class CollectorsAdapter : ListAdapter<Collector, CollectorsAdapter.CollectorViewHolder>(CollectorDiffCallback()) {
-
+class CollectorAdapter : ListAdapter<Collector, CollectorAdapter.CollectorViewHolder>(com.example.viniloapp.ui.adapters.CollectorAdapter.CollectorDiffCallback()){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectorViewHolder {
-        val binding = DataBindingUtil.inflate<CollectorItemBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.collector_item,
-            parent,
-            false
-        )
+        val binding = ItemCollectorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CollectorViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CollectorViewHolder, position: Int) {
-        val collector = getItem(position)
-        holder.bind(collector)
-
-        holder.itemView.setOnClickListener { view ->
-            val bundle = Bundle().apply {
-                putInt("collectorId", collector.id)
-            }
-
-            view.findNavController().navigate(
-                R.id.action_navigation_collector_detail_to_collectorDetailFragment,
-                bundle
-            )
-        }
+        holder.bind(getItem(position))
     }
 
-    class CollectorViewHolder(private val binding: CollectorItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CollectorViewHolder(private val binding: ItemCollectorBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(collector: Collector) {
-            binding.collector = collector
-            binding.executePendingBindings()
+            binding.collectorName.text = collector.name
+            binding.collectorEmail.text = collector.email
         }
     }
 
-    class CollectorDiffCallback : DiffUtil.ItemCallback<Collector>() {
+    private class CollectorDiffCallback : DiffUtil.ItemCallback<Collector>() {
         override fun areItemsTheSame(oldItem: Collector, newItem: Collector): Boolean {
             return oldItem.id == newItem.id
         }

@@ -21,7 +21,8 @@ class CollectorDetailViewModel(application: Application): AndroidViewModel(appli
 
     init {
         Log.d("CollectorDetailViewModel", "Initializing view model")
-        _collectorDetail.value = CollectorDetail(1, "any", "30002", "test@test.com")
+        // TODO: Add logic to call  http://apihost/collector/:collectorId and populates _collectorDetail
+        _collectorDetail.value = CollectorDetail(1, "User Name", "30002", "test@test.com")
     }
 
     class Factory(private val application: Application): ViewModelProvider.Factory {

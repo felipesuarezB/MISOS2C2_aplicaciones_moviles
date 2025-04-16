@@ -39,6 +39,7 @@ class CollectorDetailFragment: Fragment() {
                 binding.collectorDetail = collectorDetail
             }
         })
+        // TODO: Add loading symbol to CollectorDetailView along with code to manage it here
     }
 
     override fun onDestroyView() {

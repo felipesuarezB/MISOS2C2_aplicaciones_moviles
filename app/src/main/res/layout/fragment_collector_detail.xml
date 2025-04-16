@@ -7,16 +7,41 @@
             type="com.example.viniloapp.models.CollectorDetail" />
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="24dp">
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="#FAFAFA">
 
         <TextView
-            android:id="@+id/collector_id_text"
+
+            android:id="@+id/collector_detail_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{"Collector ID: " + collectorDetail}'
-            android:textSize="20sp" />
-    </FrameLayout>
+            android:text="@{collectorDetail.name}"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/collector_correo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{"Email: " + collectorDetail.email}'
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/collector_telefono"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{"Phone: " + collectorDetail.telephone}'
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="12dp"/>
+
+    </LinearLayout>
 </layout>

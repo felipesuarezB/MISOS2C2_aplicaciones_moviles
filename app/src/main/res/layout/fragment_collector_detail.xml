@@ -13,10 +13,22 @@
         android:padding="24dp">
 
         <TextView
-            android:id="@+id/collector_id_text"
+            android:id="@+id/collector_id_nombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text='@{"Collector ID: " + collectorDetail}'
+            android:text="@{collectorDetail.name}"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/collector_id_correo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{collectorDetail.email}"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/collector_id_telefono"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{collectorDetail.telephone}"
             android:textSize="20sp" />
     </FrameLayout>
 </layout>

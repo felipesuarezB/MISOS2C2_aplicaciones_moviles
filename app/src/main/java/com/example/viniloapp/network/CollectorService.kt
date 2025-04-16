@@ -1,12 +1,17 @@
 package com.example.viniloapp.network
 
+import android.util.Log
 import com.android.volley.VolleyError
 import com.example.viniloapp.MyApplication
 import com.example.viniloapp.models.Collector
 import com.example.viniloapp.models.CollectorDetail
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class CollectorService {
-    private val networkServiceAdapter = NetworkServiceAdapter.getInstance(MyApplication.getAppContext())
+    private val networkServiceAdapter =
+        NetworkServiceAdapter.getInstance(MyApplication.getAppContext())
 
     suspend fun getCollectors(): List<Collector> {
         return try {
@@ -33,27 +38,19 @@ class CollectorService {
     }
 
     suspend fun getCollectorDetail(collectorId: Int): CollectorDetail {
-        return try {
-            var collector: CollectorDetail? = null
-            var error: VolleyError? = null
-
+        return suspendCoroutine<CollectorDetail> { continuation ->
             networkServiceAdapter.getCollectorDetail(
                 collectorId,
-                onComplete = { detail ->
-                    collector = detail
+                onComplete = { detail: CollectorDetail ->
+                    continuation.resume(
+                        detail
+                    )
+
                 },
                 onError = { volleyError ->
-                    error = volleyError
+                    continuation.resumeWithException(volleyError)
                 }
             )
-
-            if (error != null) {
-                throw Exception(error?.message ?: "Error desconocido al obtener detalle del coleccionista")
-            }
-
-            collector ?: throw Exception("No se encontró el coleccionista")
-        } catch (e: Exception) {
-            throw e
         }
     }
 }

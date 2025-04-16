@@ -8,6 +8,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.viniloapp.models.CollectorDetail
+import com.example.viniloapp.network.CollectorService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CollectorDetailViewModel(application: Application): AndroidViewModel(application) {
     private val _collectorDetail = MutableLiveData<CollectorDetail>()
@@ -19,20 +25,40 @@ class CollectorDetailViewModel(application: Application): AndroidViewModel(appli
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
+    private val viewModelJob = SupervisorJob()
+    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
     init {
         Log.d("CollectorDetailViewModel", "Initializing view model")
-        // TODO: Add logic to call  http://apihost/collector/:collectorId and populates _collectorDetail restauracion
-        _collectorDetail.value = CollectorDetail(1, "User Name", "30002", "test@test.com")
+    }
+
+    fun loadCollectorDetail(collectorId: Int) {
+        _isLoading.value = true
+        _error.value = ""
+
+        viewModelScope.launch {
+            try {
+                val collectorService = CollectorService()
+                val detail = withContext(Dispatchers.IO) {
+                    collectorService.getCollectorDetail(collectorId)
+                }
+                _collectorDetail.value = detail
+            } catch (e: Exception) {
+                Log.e("CollectorDetailViewModel", "Error loading detail", e)
+                _error.value = "Error al cargar el coleccionista: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 
     class Factory(private val application: Application): ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(CollectorViewModel::class.java)) {
+            if (modelClass.isAssignableFrom(CollectorDetailViewModel::class.java)) {
                 return CollectorDetailViewModel(application) as T
             }
             throw IllegalArgumentException("Unknown viewModel Class")
         }
     }
-
 }

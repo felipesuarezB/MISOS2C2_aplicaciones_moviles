@@ -75,12 +75,14 @@ class NetworkServiceAdapter constructor(context: Context) {
                     val list = mutableListOf<Collector>()
                     for (i in 0 until resp.length()) {
                         val item = resp.getJSONObject(i)
-                        list.add(Collector(
-                            id = item.getInt("id"),
-                            name = item.getString("name"),
-                            telephone = item.getString("telephone"),
-                            email = item.getString("email")
-                        ))
+                        list.add(
+                            Collector(
+                                id = item.getInt("id"),
+                                name = item.getString("name"),
+                                telephone = item.getString("telephone"),
+                                email = item.getString("email")
+                            )
+                        )
                     }
                     onComplete(list)
                 } catch (e: Exception) {
@@ -94,29 +96,30 @@ class NetworkServiceAdapter constructor(context: Context) {
             }))
     }
 
-    fun getCollectorDetail(id: Int, onComplete: (CollectorDetail) -> Unit, onError: (error: VolleyError) -> Unit) {
-        requestQueue.add(getRequest("collectors/$id",
+    fun getCollectorDetail(
+        collectorId: Int,
+        onComplete: (CollectorDetail) -> Unit,
+        onError: (VolleyError) -> Unit
+    ) {
+        requestQueue.add(getRequest("collectors/$collectorId",
             { response ->
                 try {
                     val item = JSONObject(response)
-                    val collectorDetail = CollectorDetail(
+                    val collector = CollectorDetail(
                         id = item.getInt("id"),
                         name = item.getString("name"),
                         telephone = item.getString("telephone"),
-                        email = item.getString("email"),
-                        // Descomenta y agrega las propiedades cuando decidas implementarlas
-                        // comments = emptyList(),
-                        // favoritePerformers = emptyList(),
-                        // collectorAlbums = emptyList()
+                        email = item.getString("email")
+                        // TODO: Agregar parsing de comments, favoritePerformers, collectorAlbums si se usan
                     )
-                    onComplete(collectorDetail)
+                    onComplete(collector)
                 } catch (e: Exception) {
-                    Log.e("NetworkServiceAdapter", "Error parsing collector details", e)
+                    Log.e("NetworkServiceAdapter", "Error parsing collector detail", e)
                     onError(VolleyError(e))
                 }
             },
             { error ->
-                Log.e("NetworkServiceAdapter", "Error fetching collector details", error)
+                Log.e("NetworkServiceAdapter", "Error fetching collector detail", error)
                 onError(error)
             }
         ))

@@ -32,15 +32,15 @@ class CollectorService {
         }
     }
 
-    suspend fun getCollectorDetail(id: Int): CollectorDetail {
+    suspend fun getCollectorDetail(collectorId: Int): CollectorDetail {
         return try {
-            var collectorDetail: CollectorDetail? = null
+            var collector: CollectorDetail? = null
             var error: VolleyError? = null
 
             networkServiceAdapter.getCollectorDetail(
-                id,
+                collectorId,
                 onComplete = { detail ->
-                    collectorDetail = detail
+                    collector = detail
                 },
                 onError = { volleyError ->
                     error = volleyError
@@ -48,10 +48,10 @@ class CollectorService {
             )
 
             if (error != null) {
-                throw Exception(error?.message ?: "Error desconocido")
+                throw Exception(error?.message ?: "Error desconocido al obtener detalle del coleccionista")
             }
 
-            collectorDetail ?: throw Exception("Collector detail not found")
+            collector ?: throw Exception("No se encontró el coleccionista")
         } catch (e: Exception) {
             throw e
         }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CollectorViewModel(application: Application) : AndroidViewModel(application) {
+class CollectorViewModel1(application: Application) : AndroidViewModel(application) {
 
     private val _collectors = MutableLiveData<List<Collector>>()
     val collectors: LiveData<List<Collector>> = _collectors
@@ -57,28 +57,6 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
                 _isLoading.value = false
             }
         )
-    }
-
-    fun loadCollectorDetails(collectorId: Int) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                val collectorService = CollectorService()
-                val collectorsList = withContext(Dispatchers.IO) {
-                    collectorService.getCollectors()
-                }
-                val collector = collectorsList.find { it.id == collectorId }
-                if (collector != null) {
-                    _currentCollector.value = collector
-                } else {
-                    _error.value = "Coleccionista no encontrado"
-                }
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Error desconocido"
-            } finally {
-                _isLoading.value = false
-            }
-        }
     }
 
     override fun onCleared() {

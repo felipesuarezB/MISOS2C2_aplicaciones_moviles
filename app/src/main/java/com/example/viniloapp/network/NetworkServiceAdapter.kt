@@ -12,6 +12,9 @@ import com.android.volley.toolbox.Volley
 import com.example.viniloapp.models.Album
 import com.example.viniloapp.models.Collector
 import com.example.viniloapp.models.CollectorDetail
+import com.example.viniloapp.models.Comment
+import com.example.viniloapp.models.Performer
+import com.example.viniloapp.models.CollectorAlbum
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -105,14 +108,78 @@ class NetworkServiceAdapter constructor(context: Context) {
             { response ->
                 try {
                     val item = JSONObject(response)
-                    val collector = CollectorDetail(
+
+                    // Parse básico del Collector
+                    val collector = Collector(
                         id = item.getInt("id"),
                         name = item.getString("name"),
                         telephone = item.getString("telephone"),
                         email = item.getString("email")
-                        // TODO: Agregar parsing de comments, favoritePerformers, collectorAlbums si se usan
                     )
-                    onComplete(collector)
+
+                    // Parse de Comments
+                    val commentsJson = item.getJSONArray("comments")
+                    val comments = mutableListOf<Comment>()
+                    for (i in 0 until commentsJson.length()) {
+                        val commentObj = commentsJson.getJSONObject(i)
+                        comments.add(
+                            Comment(
+                                id = commentObj.getInt("id"),
+                                description = commentObj.getString("description"),
+                                rating = commentObj.getInt("rating")
+                            )
+                        )
+                    }
+
+                    // Parse de Favorite Performers
+                    val performersJson = item.getJSONArray("favoritePerformers")
+                    val performers = mutableListOf<Performer>()
+                    for (i in 0 until performersJson.length()) {
+                        val performerObj = performersJson.getJSONObject(i)
+                        performers.add(
+                            Performer(
+                                id = performerObj.getInt("id"),
+                                name = performerObj.getString("name"),
+                                image = performerObj.getString("image"),
+                                description = performerObj.getString("description")
+                            )
+                        )
+                    }
+
+                    // Parse de CollectorAlbums
+                    val albumsJson = item.getJSONArray("collectorAlbums")
+                    val collectorAlbums = mutableListOf<CollectorAlbum>()
+                    for (i in 0 until albumsJson.length()) {
+                        val albumObj = albumsJson.getJSONObject(i)
+                        val albumInfo = albumObj.getJSONObject("album")
+
+                        collectorAlbums.add(
+                            CollectorAlbum(
+                                id = albumObj.getInt("id"),
+                                status = albumObj.getString("status"),
+                                price = albumObj.getDouble("price"),
+                                album = Album(
+                                    id = albumInfo.getInt("id"),
+                                    name = albumInfo.getString("name"),
+                                    cover = albumInfo.getString("cover"),
+                                    releaseDate = albumInfo.getString("releaseDate"),
+                                    description = albumInfo.getString("description"),
+                                    genre = albumInfo.getString("genre"),
+                                    recordLabel = albumInfo.getString("recordLabel")
+                                )
+                            )
+                        )
+                    }
+
+                    val collectorDetail = CollectorDetail(
+                        id = collector.id,
+                        collector = collector,
+                        comments = comments,
+                        favoritePerformers = performers,
+                        collectorAlbums = collectorAlbums
+                    )
+
+                    onComplete(collectorDetail)
                 } catch (e: Exception) {
                     Log.e("NetworkServiceAdapter", "Error parsing collector detail", e)
                     onError(VolleyError(e))
@@ -123,13 +190,5 @@ class NetworkServiceAdapter constructor(context: Context) {
                 onError(error)
             }
         ))
-    }
-
-    private fun postRequest(path: String, body: JSONObject, responseListener: Response.Listener<JSONObject>, errorListener: Response.ErrorListener): JsonObjectRequest {
-        return JsonObjectRequest(Request.Method.POST, BASE_URL + path, body, responseListener, errorListener)
-    }
-
-    private fun putRequest(path: String, body: JSONObject, responseListener: Response.Listener<JSONObject>, errorListener: Response.ErrorListener): JsonObjectRequest {
-        return JsonObjectRequest(Request.Method.PUT, BASE_URL + path, body, responseListener, errorListener)
     }
 }

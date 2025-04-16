@@ -6,11 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.viniloapp.databinding.FragmentCollectorDetailBinding
+import com.example.viniloapp.ui.adapters.CollectorDetailAdapter
 
 
 class CollectorDetailFragment: Fragment() {
     private var _binding: FragmentCollectorDetailBinding? = null
     private val binding get() = _binding!!
+<<<<<<< Updated upstream
+=======
+    private lateinit var viewModelAdapter: CollectorDetailAdapter
+>>>>>>> Stashed changes
     private var collectorId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +29,7 @@ class CollectorDetailFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCollectorDetailBinding.inflate(inflater, container, false)
+        viewModelAdapter = CollectorDetailAdapter()
         return  binding.root
 
     }

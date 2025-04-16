@@ -12,7 +12,6 @@ import com.example.viniloapp.R
 import com.example.viniloapp.databinding.CollectorItemBinding
 import com.example.viniloapp.models.Collector
 
-
 class CollectorsAdapter : ListAdapter<Collector, CollectorsAdapter.CollectorViewHolder>(CollectorDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CollectorViewHolder {

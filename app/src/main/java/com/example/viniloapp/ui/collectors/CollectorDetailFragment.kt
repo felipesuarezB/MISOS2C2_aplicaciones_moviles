@@ -11,6 +11,7 @@ import com.example.viniloapp.databinding.FragmentCollectorDetailBinding
 class CollectorDetailFragment: Fragment() {
     private var _binding: FragmentCollectorDetailBinding? = null
     private val binding get() = _binding!!
+    private lateinit var viewModelAdapter: CollectorDetailAdapter()
     private var collectorId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {

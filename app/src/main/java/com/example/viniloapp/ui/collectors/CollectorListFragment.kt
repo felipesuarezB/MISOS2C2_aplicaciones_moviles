@@ -12,14 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.R
 import com.example.viniloapp.databinding.FragmentCollectorListBinding
-import com.example.viniloapp.ui.adapters.CollectorAdapter
+import com.example.viniloapp.ui.adapters.CollectorsAdapter
 import com.example.viniloapp.viewmodels.CollectorViewModel
 
 class CollectorListFragment : Fragment() {
 
     private lateinit var viewModel: CollectorViewModel
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: CollectorAdapter
+    private lateinit var adapter: CollectorsAdapter
     private lateinit var progressBar: View
 
     override fun onCreateView(
@@ -38,7 +38,7 @@ class CollectorListFragment : Fragment() {
         progressBar = view.findViewById(R.id.progress_bar)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = CollectorAdapter()
+        adapter = CollectorsAdapter()
         recyclerView.adapter = adapter
 
         viewModel = ViewModelProvider(

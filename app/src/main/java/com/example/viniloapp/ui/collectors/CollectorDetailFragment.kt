@@ -47,11 +47,17 @@ class CollectorDetailFragment: Fragment() {
                 binding.collectorDetail = collectorDetail
                 binding.progressBar.visibility = View.GONE
 
+                val albumsRecyclerView = binding.albumsRecyclerView
+                albumsRecyclerView.setHasFixedSize(true)
+                albumsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                Log.d("COLLECTOR DETAIL", collectorDetail.collectorAlbums.toString())
+//                albumsRecyclerView.adapter = CollectorAlbumAdapter(collectorDetail.albums)
+
                 // Configurar RecyclerView para comentarios
-                val recyclerView = binding.commentsRecyclerView
-                recyclerView.setHasFixedSize(true)
-                recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                recyclerView.adapter = CommentAdapter(collectorDetail.comments)
+                val commentsRecyclerView = binding.commentsRecyclerView
+                commentsRecyclerView.setHasFixedSize(true)
+                commentsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                commentsRecyclerView.adapter = CommentAdapter(collectorDetail.comments)
             }
         })
     }

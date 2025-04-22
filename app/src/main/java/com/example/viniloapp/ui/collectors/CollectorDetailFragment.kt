@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.databinding.FragmentCollectorDetailBinding
 import com.example.viniloapp.viewmodels.CollectorDetailViewModel
+import com.example.viniloapp.ui.adapters.CommentAdapter
 
 
 class CollectorDetailFragment: Fragment() {
@@ -44,6 +46,12 @@ class CollectorDetailFragment: Fragment() {
             collectorDetail?.let {
                 binding.collectorDetail = collectorDetail
                 binding.progressBar.visibility = View.GONE
+
+                // Configurar RecyclerView para comentarios
+                val recyclerView = binding.commentsRecyclerView
+                recyclerView.setHasFixedSize(true)
+                recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                recyclerView.adapter = CommentAdapter(collectorDetail.comments)
             }
         })
     }

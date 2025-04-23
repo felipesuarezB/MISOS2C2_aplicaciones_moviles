@@ -29,17 +29,27 @@ class VinilosE2ETests {
 
     @Test
     fun listAlbums() {
-        Thread.sleep(10000)
+        Thread.sleep(5000)
         onView(withId(R.id.navigation_albums))
             .perform(click())
 
         onView(withId(R.id.albums_recycler_view))
             .check(matches(hasDescendant(withText("From Zero"))));
+
+        Thread.sleep(5000)
+        onView(withId(R.id.albums_recycler_view))
+            .perform(
+                RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                    hasDescendant(withText("Don gato"))
+                )
+            )
+        onView(withText("Don gato"))
+            .check(matches(isDisplayed()))
     }
 
     @Test
     fun listCollectors() {
-        Thread.sleep(10000)
+        Thread.sleep(5000)
         onView(withId(R.id.navigation_collectors))
             .perform(click())
 
@@ -57,7 +67,7 @@ class VinilosE2ETests {
 
     @Test
     fun viewCollector() {
-        Thread.sleep(10000)
+        Thread.sleep(5000)
         onView(withId(R.id.navigation_collectors))
             .perform(click())
 
@@ -73,5 +83,11 @@ class VinilosE2ETests {
         Thread.sleep(5000)
         onView(withId(R.id.collector_detail_name))
             .check(matches(withText("Name: Gerardo")))
+
+        onView(withId(R.id.collector_correo))
+            .check(matches(withText("Email: gggg@hotmail.com")))
+
+        onView(withId(R.id.collector_telefono))
+            .check(matches(withText("Phone: 321456987")))
     }
 }

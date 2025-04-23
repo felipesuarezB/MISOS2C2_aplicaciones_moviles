@@ -193,13 +193,13 @@ class NetworkServiceAdapter constructor(context: Context) {
                                 val albumJson = JSONObject(albumResponse)
                                 // You can parse more fields if needed from albumJson
                                 val album = Album(
-                                    id = albumObj.getInt("id"),
-                                    name = albumObj.getString("name"),
-                                    cover = albumObj.getString("cover"),
-                                    releaseDate = albumObj.getString("releaseDate"),
-                                    description = albumObj.getString("description"),
-                                    genre = albumObj.getString("genre"),
-                                    recordLabel = albumObj.getString("recordLabel")
+                                    id = albumJson.getInt("id"),
+                                    name = albumJson.optString("name"),
+                                    cover = albumJson.optString("cover"),
+                                    releaseDate = albumJson.optString("releaseDate"),
+                                    description = albumJson.optString("description"),
+                                    genre = albumJson.optString("genre"),
+                                    recordLabel = albumJson.optString("recordLabel")
                                 )
                                 val fullAlbum = CollectorAlbum(
                                     id = albumId,

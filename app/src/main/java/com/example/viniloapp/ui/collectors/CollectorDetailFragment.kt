@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.databinding.FragmentCollectorDetailBinding
+import com.example.viniloapp.ui.adapters.CollectorAlbumAdapter
 import com.example.viniloapp.viewmodels.CollectorDetailViewModel
 import com.example.viniloapp.ui.adapters.CommentAdapter
 
@@ -19,6 +20,7 @@ class CollectorDetailFragment: Fragment() {
     private var _binding: FragmentCollectorDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: CollectorDetailViewModel
+    private lateinit var collectorAlbumAdapter: CollectorAlbumAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +42,12 @@ class CollectorDetailFragment: Fragment() {
 
         val collectorId = arguments?.getInt("collectorId") ?: return
 
+        val albumsRecyclerView = binding.albumsRecyclerView
+        albumsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        collectorAlbumAdapter = CollectorAlbumAdapter()
+        albumsRecyclerView.adapter = collectorAlbumAdapter
+
+
         viewModel.loadCollectorDetail(collectorId)
 
         viewModel.collectorDetail.observe(viewLifecycleOwner, Observer { collectorDetail ->
@@ -47,12 +55,7 @@ class CollectorDetailFragment: Fragment() {
                 binding.collectorDetail = collectorDetail
                 binding.progressBar.visibility = View.GONE
 
-                val albumsRecyclerView = binding.albumsRecyclerView
-                albumsRecyclerView.setHasFixedSize(true)
-                albumsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-                Log.d("COLLECTOR DETAIL", collectorDetail.collectorAlbums.toString())
-//                albumsRecyclerView.adapter = CollectorAlbumAdapter(collectorDetail.albums)
-
+                collectorAlbumAdapter.submitList(collectorDetail.collectorAlbums)
                 // Configurar RecyclerView para comentarios
                 val commentsRecyclerView = binding.commentsRecyclerView
                 commentsRecyclerView.setHasFixedSize(true)

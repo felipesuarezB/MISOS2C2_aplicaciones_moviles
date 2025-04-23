@@ -6,6 +6,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.action.ViewActions.scrollTo
+import org.hamcrest.CoreMatchers.containsString
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -75,19 +76,27 @@ class VinilosE2ETests {
         onView(withId(R.id.collectors_recycler_view))
             .perform(
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                    hasDescendant(withText("Gerardo")),
+                    hasDescendant(withText("Andrea Mina")),
                     click()
                 )
             )
 
         Thread.sleep(5000)
         onView(withId(R.id.collector_detail_name))
-            .check(matches(withText("Name: Gerardo")))
+            .check(matches(withText("Name: Andrea Mina")))
 
         onView(withId(R.id.collector_correo))
-            .check(matches(withText("Email: gggg@hotmail.com")))
+            .check(matches(withText("Email: andre@email.com")))
 
         onView(withId(R.id.collector_telefono))
-            .check(matches(withText("Phone: 321456987")))
+            .check(matches(withText("Phone: 3127845961")))
+
+        onView(withId(R.id.albumsRecyclerView))
+            .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                hasDescendant(withText(containsString("Ejemplo")))
+            ))
+
+        onView(allOf(withId(R.id.album_name), withText(containsString("Ejemplo"))))
+            .check(matches(isDisplayed()))
     }
 }

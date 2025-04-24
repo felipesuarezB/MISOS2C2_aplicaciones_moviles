@@ -151,10 +151,10 @@ class NetworkServiceAdapter constructor(context: Context) {
                     performers.add(
                         Performer(
                             id = performerObj.getInt("id"),
-                            name = performerObj.getString("name"),
-                            image = performerObj.getString("image"),
-                            description = performerObj.getString("description"),
-                            birthDate = performerObj.getString("birthDate")
+                            name = performerObj.optString("name"),
+                            image = performerObj.optString("image"),
+                            description = performerObj.optString("description"),
+                            birthDate = performerObj.optString("birthDate")
                         )
                     )
                 }
@@ -162,30 +162,92 @@ class NetworkServiceAdapter constructor(context: Context) {
                 // Parse de CollectorAlbums
                 val albumsJson = item.getJSONArray("collectorAlbums")
                 val collectorAlbums = mutableListOf<CollectorAlbum>()
-                for (i in 0 until albumsJson.length()) {
-                    val albumObj = albumsJson.getJSONObject(i)
-
-                    collectorAlbums.add(
-                        CollectorAlbum(
-                            id = albumObj.getInt("id"),
-                            price = albumObj.getInt("price"),
-                            status = albumObj.getString("status")
-
+                val albumCount = albumsJson.length()
+                if (albumCount == 0) {
+                    onComplete(
+                        CollectorDetail(
+                            id = collector.id,
+                            name = collector.name,
+                            telephone = collector.telephone,
+                            email = collector.email,
+                            comments = comments,
+                            favoritePerformers = performers,
+                            collectorAlbums = collectorAlbums
                         )
                     )
+                    return@getRequest
                 }
 
-                val collectorDetail = CollectorDetail(
-                    id = collector.id,
-                    name = collector.name,
-                    telephone = collector.telephone,
-                    email = collector.email,
-                    comments = comments,
-                    favoritePerformers = performers,
-                    collectorAlbums = collectorAlbums
-                )
+                var loadedCount = 0
+                for (i in 0 until albumCount) {
+                    val albumObj = albumsJson.getJSONObject(i)
+                    val albumId = albumObj.getInt("id")
+                    val price = albumObj.getInt("price")
+                    val status = albumObj.getString("status")
 
-                onComplete(collectorDetail)
+                    // Fetch full album info
+                    requestQueue.add(getRequest(
+                        "albums/$albumId",
+                        { albumResponse ->
+                            try {
+                                val albumJson = JSONObject(albumResponse)
+                                // You can parse more fields if needed from albumJson
+                                val album = Album(
+                                    id = albumJson.getInt("id"),
+                                    name = albumJson.optString("name"),
+                                    cover = albumJson.optString("cover"),
+                                    releaseDate = albumJson.optString("releaseDate"),
+                                    description = albumJson.optString("description"),
+                                    genre = albumJson.optString("genre"),
+                                    recordLabel = albumJson.optString("recordLabel")
+                                )
+                                val fullAlbum = CollectorAlbum(
+                                    id = albumId,
+                                    price = price,
+                                    status = status,
+                                    album = album
+                                )
+                                collectorAlbums.add(fullAlbum)
+                            } catch (e: Exception) {
+                                Log.e("NetworkServiceAdapter", "Error parsing album $albumId", e)
+                            }
+
+                            loadedCount++
+                            if (loadedCount == albumCount) {
+                                // All albums fetched
+                                onComplete(
+                                    CollectorDetail(
+                                        id = collector.id,
+                                        name = collector.name,
+                                        telephone = collector.telephone,
+                                        email = collector.email,
+                                        comments = comments,
+                                        favoritePerformers = performers,
+                                        collectorAlbums = collectorAlbums
+                                    )
+                                )
+                            }
+                        },
+                        { error ->
+                            Log.e("NetworkServiceAdapter", "Error fetching album $albumId", error)
+                            loadedCount++
+                            if (loadedCount == albumCount) {
+                                onComplete(
+                                    CollectorDetail(
+                                        id = collector.id,
+                                        name = collector.name,
+                                        telephone = collector.telephone,
+                                        email = collector.email,
+                                        comments = comments,
+                                        favoritePerformers = performers,
+                                        collectorAlbums = collectorAlbums
+                                    )
+                                )
+                            }
+                        }
+                    ))
+                }
+
             },
             { error ->
                 Log.e("NetworkServiceAdapter", "Error fetching collector detail", error)

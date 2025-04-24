@@ -2,27 +2,35 @@ package com.example.viniloapp.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.viniloapp.R
 import com.example.viniloapp.databinding.ItemAlbumBinding
 import com.example.viniloapp.models.Album
 
-class AlbumAdapter : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffCallback()) {
+class AlbumsAdapter : ListAdapter<Album, AlbumsAdapter.AlbumViewHolder>(AlbumDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
-        val binding = ItemAlbumBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = DataBindingUtil.inflate<ItemAlbumBinding>(
+            LayoutInflater.from(parent.context),
+            R.layout.item_album,
+            parent,
+            false
+        )
         return AlbumViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val album = getItem(position)
+        holder.bind(album)
     }
 
     class AlbumViewHolder(private val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(album: Album) {
-            binding.albumName.text = album.name
-            binding.albumGenre.text = album.genre
+            binding.album = album
+            binding.executePendingBindings()
         }
     }
 

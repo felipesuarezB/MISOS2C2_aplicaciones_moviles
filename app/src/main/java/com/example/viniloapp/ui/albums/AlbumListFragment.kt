@@ -11,14 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.R
-import com.example.viniloapp.ui.adapters.AlbumAdapter
+import com.example.viniloapp.ui.adapters.AlbumsAdapter
 import com.example.viniloapp.viewmodels.AlbumViewModel
 
 class AlbumListFragment : Fragment() {
 
     private lateinit var viewModel: AlbumViewModel
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: AlbumAdapter
+    private lateinit var adapter: AlbumsAdapter
     private lateinit var progressBar: View
 
     override fun onCreateView(
@@ -37,7 +37,7 @@ class AlbumListFragment : Fragment() {
         progressBar = view.findViewById(R.id.progress_bar)
         
         recyclerView.layoutManager = LinearLayoutManager(context)
-        adapter = AlbumAdapter()
+        adapter = AlbumsAdapter()
         recyclerView.adapter = adapter
 
         viewModel = ViewModelProvider(

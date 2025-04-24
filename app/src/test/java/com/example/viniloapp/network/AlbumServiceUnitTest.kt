@@ -1,15 +1,14 @@
 package com.example.viniloapp.network
 
 import com.example.viniloapp.models.Album
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import com.android.volley.VolleyError
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class AlbumServiceUnitTest {
 
     private lateinit var albumService: AlbumService
@@ -17,8 +16,7 @@ class AlbumServiceUnitTest {
 
     @Before
     fun setup() {
-        NetworkServiceAdapter.instance = mockNetworkAdapter
-        albumService = AlbumService()
+        albumService = AlbumService(mockNetworkAdapter)
     }
 
     @Test
@@ -51,14 +49,17 @@ class AlbumServiceUnitTest {
 
         val result = albumService.getAlbums()
         assertEquals(2, result.size)
-        assertEquals("Album 1", result[0].name)
+        assertEquals("Thriller", result[0].name)
+        assertEquals("Back in Black", result[1].name)
     }
 
     @Test
     fun `getAlbums should throw exception when error occurs`() = runTest {
+        val volleyError = VolleyError("Network error")
+
         whenever(mockNetworkAdapter.getAlbums(any(), any())).thenAnswer {
-            val onError = it.getArgument<(Exception) -> Unit>(1)
-            onError(Exception("Network error"))
+            val onError = it.getArgument<(VolleyError) -> Unit>(1)
+            onError(volleyError)
         }
 
         val exception = assertFailsWith<Exception> {

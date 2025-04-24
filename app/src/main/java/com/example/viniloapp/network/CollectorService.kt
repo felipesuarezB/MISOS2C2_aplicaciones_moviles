@@ -9,32 +9,29 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class CollectorService {
-    private val networkServiceAdapter =
+class CollectorService(
+    private val networkServiceAdapter: NetworkServiceAdapter =
         NetworkServiceAdapter.getInstance(MyApplication.getAppContext())
+) {
 
     suspend fun getCollectors(): List<Collector> {
-        return try {
-            var collectorsList: List<Collector> = emptyList()
-            var error: VolleyError? = null
+        var collectorsList: List<Collector> = emptyList()
+        var error: VolleyError? = null
 
-            networkServiceAdapter.getCollectors(
-                onComplete = { collectors ->
-                    collectorsList = collectors
-                },
-                onError = { volleyError ->
-                    error = volleyError
-                }
-            )
-
-            if (error != null) {
-                throw Exception(error?.message ?: "Error desconocido")
+        networkServiceAdapter.getCollectors(
+            onComplete = { collectors ->
+                collectorsList = collectors
+            },
+            onError = { volleyError ->
+                error = volleyError
             }
+        )
 
-            collectorsList
-        } catch (e: Exception) {
-            throw e
+        if (error != null) {
+            throw Exception(error?.message ?: "Error desconocido")
         }
+
+        return collectorsList
     }
 
     suspend fun getCollectorDetail(collectorId: Int): CollectorDetail {

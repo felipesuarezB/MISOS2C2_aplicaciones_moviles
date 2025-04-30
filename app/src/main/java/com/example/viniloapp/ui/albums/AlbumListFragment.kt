@@ -65,7 +65,7 @@ class AlbumListFragment : Fragment() {
         val addButton = view.findViewById<Button>(R.id.button_add_album)
         addButton.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, AlbumCreateFragment())
+                .replace(R.id.nav_host_fragment, AlbumCreateFragment())
                 .addToBackStack(null)
                 .commit()
         }

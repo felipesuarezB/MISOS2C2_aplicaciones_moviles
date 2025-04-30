@@ -77,6 +77,34 @@ class NetworkServiceAdapter constructor(context: Context) {
         )
     }
 
+    fun createAlbum(
+        name: String,
+        cover: String,
+        releaseDate: String,
+        description: String,
+        genre: String,
+        recordLabel: String,
+        onComplete: () -> Unit,
+        onError: (VolleyError) -> Unit
+    ) {
+        val jsonBody = JSONObject().apply {
+            put("name", name)
+            put("cover", cover)
+            put("releaseDate", releaseDate)
+            put("description", description)
+            put("genre", genre)
+            put("recordLabel", recordLabel)
+        }
+        val request = JsonObjectRequest(
+            Request.Method.POST,
+            BASE_URL + "albums",
+            jsonBody,
+            { _ -> onComplete() },
+            { error -> onError(error) }
+        )
+        requestQueue.add(request)
+    }
+
     fun getCollectors(
         onComplete: (resp: List<Collector>) -> Unit,
         onError: (error: VolleyError) -> Unit

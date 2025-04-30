@@ -62,6 +62,14 @@ class AlbumListFragment : Fragment() {
             }
         }
 
+        val addButton = view.findViewById<Button>(R.id.button_add_album)
+        addButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AlbumCreateFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         Log.d("AlbumListFragment", "Iniciando carga de álbumes")
         viewModel.loadAlbums()
     }

@@ -11,9 +11,6 @@
         <action
             android:id="@+id/action_albumListFragment_to_albumDetailFragment"
             app:destination="@id/albumDetailFragment" />
-        <action
-            android:id="@+id/action_albumListFragment_to_albumCreateFragment"
-            app:destination="@id/albumCreateFragment" />
     </fragment>
 
     <fragment
@@ -45,12 +42,5 @@
             android:name="albumId"
             app:argType="integer" />
     </fragment>
-
-    <fragment
-        android:id="@+id/albumCreateFragment"
-        android:name="com.example.viniloapp.ui.albums.AlbumCreateFragment"
-        android:label="Crear Álbum" />
-
-
 
 </navigation> 

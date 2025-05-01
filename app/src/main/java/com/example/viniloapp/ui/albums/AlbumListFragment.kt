@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.R
@@ -65,10 +66,7 @@ class AlbumListFragment : Fragment() {
 
         val addButton = view.findViewById<Button>(R.id.button_add_album)
         addButton.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.nav_host_fragment, AlbumCreateFragment())
-                .addToBackStack(null)
-                .commit()
+            findNavController().navigate(R.id.action_albumListFragment_to_albumCreateFragment)
         }
 
         Log.d("AlbumListFragment", "Iniciando carga de álbumes")

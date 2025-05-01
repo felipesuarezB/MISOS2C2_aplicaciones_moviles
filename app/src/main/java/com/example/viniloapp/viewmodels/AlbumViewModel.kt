@@ -32,8 +32,8 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
     val error: LiveData<String> = _error
 
 
-    private val _creationResult = MutableLiveData<Boolean?>()
-    val creationResult: LiveData<Boolean?> = _creationResult
+    private val _creationResult = MutableLiveData<String?>()
+    val creationResult: LiveData<String?> = _creationResult
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -97,8 +97,8 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
     ) {
         NetworkServiceAdapter.getInstance(getApplication()).createAlbum(
             name, cover, releaseDate, description, genre, recordLabel,
-            onComplete = { _creationResult.postValue(true) },
-            onError = { _creationResult.postValue(false) }
+            onComplete = { _creationResult.postValue("Álbum creado exitosamente") },
+            onError = { error -> _error.postValue(error.message) }
         )
     }
 

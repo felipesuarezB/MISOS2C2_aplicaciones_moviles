@@ -100,7 +100,17 @@ class NetworkServiceAdapter constructor(context: Context) {
             BASE_URL + "albums",
             jsonBody,
             { _ -> onComplete() },
-            { error -> onError(error) }
+            { error ->
+                val responseData = error.networkResponse?.data
+                if (responseData == null) {
+                    onError(error)
+                } else {
+                    val jsonResponse = JSONObject(String(responseData, Charsets.UTF_8))
+                    val stringError = jsonResponse.optString("message", "unknown error")
+                    Log.d("Network-CreateAlbum", stringError)
+                    onError(VolleyError(stringError))
+                }
+            }
         )
         requestQueue.add(request)
     }

@@ -9,41 +9,85 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <EditText
-            android:id="@+id/editTextAlbumName"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputAlbumName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre del álbum" />
+            android:hint="Nombre del álbum"
+            android:layout_marginBottom="8dp">
 
-        <EditText
-            android:id="@+id/editTextAlbumCover"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="URL de la portada" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAlbumName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/editTextAlbumReleaseDate"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputAlbumCover"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Fecha de lanzamiento (YYYY-MM-DD)" />
+            android:hint="URL de la portada"
+            android:layout_marginBottom="8dp">
 
-        <EditText
-            android:id="@+id/editTextAlbumDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Descripción" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAlbumCover"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/editTextAlbumGenre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Género" />
 
-        <EditText
-            android:id="@+id/editTextAlbumRecordLabel"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputAlbumReleaseDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Sello discográfico" />
+            android:hint="Fecha de lanzamiento (YYYY-MM-DD)"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAlbumReleaseDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputAlbumDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripción"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAlbumDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputAlbumGenre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Género"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAlbumGenre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputRecordLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sello discográfico"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAlbumRecordLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/buttonCreateAlbum"

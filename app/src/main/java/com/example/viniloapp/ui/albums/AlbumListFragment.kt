@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.R
@@ -60,6 +62,11 @@ class AlbumListFragment : Fragment() {
                 Log.e("AlbumListFragment", "Error recibido: $error")
                 Toast.makeText(context, error, Toast.LENGTH_LONG).show()
             }
+        }
+
+        val addButton = view.findViewById<Button>(R.id.button_add_album)
+        addButton.setOnClickListener {
+            findNavController().navigate(R.id.action_albumListFragment_to_albumCreateFragment)
         }
 
         Log.d("AlbumListFragment", "Iniciando carga de álbumes")

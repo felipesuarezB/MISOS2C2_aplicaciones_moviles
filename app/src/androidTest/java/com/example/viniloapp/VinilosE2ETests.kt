@@ -117,4 +117,29 @@ class VinilosE2ETests {
         onView(withId(R.id.editTextAlbumGenre)).check(matches(isDisplayed()))
         onView(withId(R.id.editTextAlbumRecordLabel)).check(matches(isDisplayed()))
     }
+
+    @Test
+    fun detalleAlbum(){
+        Thread.sleep(5000)
+        // Navegar a la sección de álbumes
+        onView(withId(R.id.navigation_albums)).perform(click())
+        Thread.sleep(2000)
+        onView(withId(R.id.albums_recycler_view))
+            .perform(
+                RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                    hasDescendant(withText("Buscando América Prueba")),
+                    click()
+                )
+            )
+        Thread.sleep(5000)
+        onView(withId(R.id.album_record_label))
+            .check(matches(withText("Sello discográfico: Elektra")))
+
+        onView(withId(R.id.album_release_date))
+            .check(matches(withText("Fecha de lanzamiento: 1984-08-01T00:00:00.000Z")))
+
+        onView(withId(R.id.album_genre))
+            .check(matches(withText("Género: Salsa")))
+
+    }
 }

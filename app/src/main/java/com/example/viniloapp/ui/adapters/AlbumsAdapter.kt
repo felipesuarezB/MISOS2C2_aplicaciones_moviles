@@ -1,8 +1,10 @@
 package com.example.viniloapp.ui.adapters
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +27,16 @@ class AlbumsAdapter : ListAdapter<Album, AlbumsAdapter.AlbumViewHolder>(AlbumDif
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
         val album = getItem(position)
         holder.bind(album)
+
+        holder.itemView.setOnClickListener { view ->
+            val bundle = Bundle().apply {
+                putInt("albumId", album.id)
+            }
+            Navigation.findNavController(view).navigate(
+                R.id.action_albumListFragment_to_albumDetailFragment,
+                bundle
+            )
+        }
     }
 
     class AlbumViewHolder(private val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {

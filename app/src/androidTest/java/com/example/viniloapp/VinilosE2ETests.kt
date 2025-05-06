@@ -35,7 +35,7 @@ class VinilosE2ETests {
             .perform(click())
 
         onView(withId(R.id.albums_recycler_view))
-            .check(matches(hasDescendant(withText("From Zero"))));
+            .check(matches(hasDescendant(withText("Buscando América Prueba"))));
 
         Thread.sleep(5000)
         onView(withId(R.id.albums_recycler_view))

@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.R
@@ -21,6 +23,11 @@ class AlbumListFragment : Fragment() {
     private lateinit var adapter: AlbumsAdapter
     private lateinit var progressBar: View
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,7 +38,12 @@ class AlbumListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("AlbumListFragment", "onViewCreated iniciado")
+        
+        // Hide back button in main view
+        (requireActivity() as androidx.appcompat.app.AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setDisplayShowHomeEnabled(false)
+        }
 
         recyclerView = view.findViewById(R.id.albums_recycler_view)
         progressBar = view.findViewById(R.id.progress_bar)
@@ -60,6 +72,11 @@ class AlbumListFragment : Fragment() {
                 Log.e("AlbumListFragment", "Error recibido: $error")
                 Toast.makeText(context, error, Toast.LENGTH_LONG).show()
             }
+        }
+
+        val addButton = view.findViewById<Button>(R.id.button_add_album)
+        addButton.setOnClickListener {
+            findNavController().navigate(R.id.action_albumListFragment_to_albumCreateFragment)
         }
 
         Log.d("AlbumListFragment", "Iniciando carga de álbumes")

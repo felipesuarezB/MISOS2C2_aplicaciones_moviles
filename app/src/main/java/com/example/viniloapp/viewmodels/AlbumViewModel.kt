@@ -31,6 +31,10 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
+
+    private val _creationResult = MutableLiveData<String?>()
+    val creationResult: LiveData<String?> = _creationResult
+
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -66,21 +70,43 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
             _isLoading.value = true
             try {
                 val albumService = AlbumService()
-                val albumsList = withContext(Dispatchers.IO) {
-                    albumService.getAlbums()
+                val albumDetail = withContext(Dispatchers.IO) {
+                    albumService.getAlbumDetail(albumId)
                 }
-                val album = albumsList.find { it.id == albumId }
-                if (album != null) {
-                    _currentAlbum.value = album
-                } else {
-                    _error.value = "Álbum no encontrado"
-                }
+                _currentAlbum.value = Album(
+                    id = albumDetail.id,
+                    name = albumDetail.name,
+                    cover = albumDetail.cover,
+                    recordLabel = albumDetail.recordLabel,
+                    releaseDate = albumDetail.releaseDate,
+                    genre = albumDetail.genre,
+                    description = albumDetail.description
+                )
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error desconocido"
             } finally {
                 _isLoading.value = false
             }
         }
+    }
+
+    fun createAlbum(
+        name: String,
+        cover: String,
+        releaseDate: String,
+        description: String,
+        genre: String,
+        recordLabel: String
+    ) {
+        NetworkServiceAdapter.getInstance(getApplication()).createAlbum(
+            name, cover, releaseDate, description, genre, recordLabel,
+            onComplete = { _creationResult.postValue("Álbum creado exitosamente") },
+            onError = { error -> _error.postValue(error.message) }
+        )
+    }
+
+    fun clearCreationResult() {
+        _creationResult.value = null
     }
 
     override fun onCleared() {

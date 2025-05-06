@@ -15,6 +15,8 @@ import com.example.viniloapp.models.CollectorDetail
 import com.example.viniloapp.models.Comment
 import com.example.viniloapp.models.Performer
 import com.example.viniloapp.models.CollectorAlbum
+import com.example.viniloapp.models.AlbumDetail
+import com.example.viniloapp.models.Track
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -75,6 +77,44 @@ class NetworkServiceAdapter constructor(context: Context) {
                     onError(error)
                 })
         )
+    }
+
+    fun createAlbum(
+        name: String,
+        cover: String,
+        releaseDate: String,
+        description: String,
+        genre: String,
+        recordLabel: String,
+        onComplete: () -> Unit,
+        onError: (VolleyError) -> Unit
+    ) {
+        val jsonBody = JSONObject().apply {
+            put("name", name)
+            put("cover", cover)
+            put("releaseDate", releaseDate)
+            put("description", description)
+            put("genre", genre)
+            put("recordLabel", recordLabel)
+        }
+        val request = JsonObjectRequest(
+            Request.Method.POST,
+            BASE_URL + "albums",
+            jsonBody,
+            { _ -> onComplete() },
+            { error ->
+                val responseData = error.networkResponse?.data
+                if (responseData == null) {
+                    onError(error)
+                } else {
+                    val jsonResponse = JSONObject(String(responseData, Charsets.UTF_8))
+                    val stringError = jsonResponse.optString("message", "unknown error")
+                    Log.d("Network-CreateAlbum", stringError)
+                    onError(VolleyError(stringError))
+                }
+            }
+        )
+        requestQueue.add(request)
     }
 
     fun getCollectors(
@@ -254,5 +294,59 @@ class NetworkServiceAdapter constructor(context: Context) {
                 onError(error)
             }
         ))
+    }
+
+    fun getAlbumDetail(
+        albumId: Int,
+        onComplete: (AlbumDetail) -> Unit,
+        onError: (VolleyError) -> Unit
+    ) {
+        requestQueue.add(
+            getRequest(
+                "albums/$albumId",
+                { response ->
+                    try {
+                        val albumJson = JSONObject(response)
+                        val tracksArray = albumJson.getJSONArray("tracks")
+                        val tracks = mutableListOf<Track>()
+                        
+                        Log.d("NetworkServiceAdapter", "Total tracks in response: ${tracksArray.length()}")
+                        
+                        for (i in 0 until tracksArray.length()) {
+                            val trackJson = tracksArray.getJSONObject(i)
+                            val track = Track(
+                                id = trackJson.getInt("id"),
+                                name = trackJson.getString("name"),
+                                duration = trackJson.getString("duration")
+                            )
+                            Log.d("NetworkServiceAdapter", "Processing track: ${track.name}")
+                            tracks.add(track)
+                        }
+
+                        Log.d("NetworkServiceAdapter", "Total tracks processed: ${tracks.size}")
+
+                        val albumDetail = AlbumDetail(
+                            id = albumJson.getInt("id"),
+                            name = albumJson.getString("name"),
+                            cover = albumJson.getString("cover"),
+                            releaseDate = albumJson.getString("releaseDate"),
+                            description = albumJson.getString("description"),
+                            genre = albumJson.getString("genre"),
+                            recordLabel = albumJson.getString("recordLabel"),
+                            tracks = tracks
+                        )
+                        
+                        onComplete(albumDetail)
+                    } catch (e: Exception) {
+                        Log.e("NetworkServiceAdapter", "Error parsing album detail", e)
+                        onError(VolleyError(e))
+                    }
+                },
+                { error ->
+                    Log.e("NetworkServiceAdapter", "Error fetching album detail", error)
+                    onError(error)
+                }
+            )
+        )
     }
 }

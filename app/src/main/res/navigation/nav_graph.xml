@@ -36,7 +36,7 @@
 
     <fragment
         android:id="@+id/albumDetailFragment"
-        android:name="com.example.viniloapp.ui.fragments.AlbumDetailFragment"
+        android:name="com.example.viniloapp.ui.albums.AlbumDetailFragment"
         android:label="Detalle del Álbum">
         <argument
             android:name="albumId"

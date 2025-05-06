@@ -99,4 +99,22 @@ class VinilosE2ETests {
         onView(allOf(withId(R.id.album_name), withText(containsString("Ejemplo"))))
             .check(matches(isDisplayed()))
     }
+
+    @Test
+    fun createAlbumFormFieldsExist() {
+        Thread.sleep(5000)
+        // Navegar a la sección de álbumes
+        onView(withId(R.id.navigation_albums)).perform(click())
+        Thread.sleep(2000)
+        // Oprimir el botón de crear álbum
+        onView(withId(R.id.button_add_album)).perform(click())
+        Thread.sleep(2000)
+        // Validar que los campos requeridos existen en el formulario
+        onView(withId(R.id.editTextAlbumName)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumCover)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumReleaseDate)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumDescription)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumGenre)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumRecordLabel)).check(matches(isDisplayed()))
+    }
 }

@@ -23,6 +23,11 @@ class AlbumListFragment : Fragment() {
     private lateinit var adapter: AlbumsAdapter
     private lateinit var progressBar: View
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,7 +38,12 @@ class AlbumListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("AlbumListFragment", "onViewCreated iniciado")
+        
+        // Hide back button in main view
+        (requireActivity() as androidx.appcompat.app.AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setDisplayShowHomeEnabled(false)
+        }
 
         recyclerView = view.findViewById(R.id.albums_recycler_view)
         progressBar = view.findViewById(R.id.progress_bar)

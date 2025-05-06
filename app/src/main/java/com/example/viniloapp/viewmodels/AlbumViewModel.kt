@@ -70,15 +70,18 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
             _isLoading.value = true
             try {
                 val albumService = AlbumService()
-                val albumsList = withContext(Dispatchers.IO) {
-                    albumService.getAlbums()
+                val albumDetail = withContext(Dispatchers.IO) {
+                    albumService.getAlbumDetail(albumId)
                 }
-                val album = albumsList.find { it.id == albumId }
-                if (album != null) {
-                    _currentAlbum.value = album
-                } else {
-                    _error.value = "Álbum no encontrado"
-                }
+                _currentAlbum.value = Album(
+                    id = albumDetail.id,
+                    name = albumDetail.name,
+                    cover = albumDetail.cover,
+                    recordLabel = albumDetail.recordLabel,
+                    releaseDate = albumDetail.releaseDate,
+                    genre = albumDetail.genre,
+                    description = albumDetail.description
+                )
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error desconocido"
             } finally {

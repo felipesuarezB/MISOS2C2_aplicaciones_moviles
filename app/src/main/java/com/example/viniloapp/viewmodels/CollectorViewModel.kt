@@ -31,6 +31,7 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val collectorService = CollectorService()
 
     init {
         Log.d("CollectorViewModel", "ViewModel inicializado")
@@ -42,7 +43,7 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
         _isLoading.value = true
         _error.value = ""
 
-        NetworkServiceAdapter.getInstance(getApplication()).getCollectors(
+        collectorService.getCollectors(
             onComplete = { response ->
                 Log.d("CollectorViewModel", "Respuesta recibida: ${response.size} coleccionistas")
                 response.forEach { collector ->

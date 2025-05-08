@@ -27,6 +27,7 @@ class CollectorDetailViewModel(application: Application): AndroidViewModel(appli
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val collectorService = CollectorService()
 
     init {
         Log.d("CollectorDetailViewModel", "Initializing view model")
@@ -36,20 +37,20 @@ class CollectorDetailViewModel(application: Application): AndroidViewModel(appli
         _isLoading.value = true
         _error.value = ""
 
-        viewModelScope.launch {
-            try {
-                val collectorService = CollectorService()
-                val detail = withContext(Dispatchers.IO) {
-                    collectorService.getCollectorDetail(collectorId)
-                }
-                _collectorDetail.value = detail
-            } catch (e: Exception) {
+        collectorService.getCollectorDetail(
+            collectorId,
+            { collector ->
+                _collectorDetail.value = collector
+                _isLoading.value = false
+            },
+            {
+                e ->
                 Log.e("CollectorDetailViewModel", "Error loading detail", e)
                 _error.value = "Error al cargar el coleccionista: ${e.message}"
-            } finally {
                 _isLoading.value = false
+
             }
-        }
+        )
     }
 
     class Factory(private val application: Application): ViewModelProvider.Factory {

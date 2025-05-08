@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class AlbumViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -37,6 +38,7 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val albumService = AlbumService()
 
     init {
         Log.d("AlbumViewModel", "ViewModel inicializado")
@@ -47,8 +49,8 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
         Log.d("AlbumViewModel", "Iniciando carga de álbumes")
         _isLoading.value = true
         _error.value = ""
-        
-        NetworkServiceAdapter.getInstance(getApplication()).getAlbums(
+
+        albumService.getAlbums(
             onComplete = { response ->
                 Log.d("AlbumViewModel", "Respuesta recibida: ${response.size} álbumes")
                 response.forEach { album ->
@@ -65,31 +67,6 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    fun loadAlbumDetails(albumId: Int) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                val albumService = AlbumService()
-                val albumDetail = withContext(Dispatchers.IO) {
-                    albumService.getAlbumDetail(albumId)
-                }
-                _currentAlbum.value = Album(
-                    id = albumDetail.id,
-                    name = albumDetail.name,
-                    cover = albumDetail.cover,
-                    recordLabel = albumDetail.recordLabel,
-                    releaseDate = albumDetail.releaseDate,
-                    genre = albumDetail.genre,
-                    description = albumDetail.description
-                )
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Error desconocido"
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
-
     fun createAlbum(
         name: String,
         cover: String,
@@ -98,8 +75,18 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
         genre: String,
         recordLabel: String
     ) {
-        NetworkServiceAdapter.getInstance(getApplication()).createAlbum(
-            name, cover, releaseDate, description, genre, recordLabel,
+
+        val jsonBody: JSONObject = JSONObject().apply {
+            put("name", name)
+            put("cover", cover)
+            put("releaseDate", releaseDate)
+            put("description", description)
+            put("genre", genre)
+            put("recordLabel", recordLabel)
+        }
+
+        albumService.createAlbum(
+            jsonBody,
             onComplete = { _creationResult.postValue("Álbum creado exitosamente") },
             onError = { error -> _error.postValue(error.message) }
         )

@@ -15,7 +15,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AlbumDetailViewModel(application: Application): AndroidViewModel(application) {
+class AlbumDetailViewModel(application: Application) : AndroidViewModel(application) {
     private val _albumDetail = MutableLiveData<AlbumDetail>()
     val albumDetail: LiveData<AlbumDetail> = _albumDetail
 
@@ -37,22 +37,24 @@ class AlbumDetailViewModel(application: Application): AndroidViewModel(applicati
         _error.value = ""
 
         viewModelScope.launch {
-            try {
-                val albumService = AlbumService()
-                val detail = withContext(Dispatchers.IO) {
-                    albumService.getAlbumDetail(albumId)
+            val albumService = AlbumService()
+            albumService.getAlbumDetail(
+                albumId,
+                { album ->
+                    _albumDetail.value = album
+                    _isLoading.value = false
+                },
+                { e ->
+                    Log.e("AlbumDetailViewModel", "Error loading detail", e)
+                    _error.value = "Error al cargar el álbum: ${e.message}"
+                    _isLoading.value = false
+
                 }
-                _albumDetail.value = detail
-            } catch (e: Exception) {
-                Log.e("AlbumDetailViewModel", "Error loading detail", e)
-                _error.value = "Error al cargar el álbum: ${e.message}"
-            } finally {
-                _isLoading.value = false
-            }
+            )
         }
     }
 
-    class Factory(private val application: Application): ViewModelProvider.Factory {
+    class Factory(private val application: Application) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(AlbumDetailViewModel::class.java)) {

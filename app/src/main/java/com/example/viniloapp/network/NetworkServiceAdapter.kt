@@ -5,6 +5,7 @@ import android.util.Log
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.Response.ErrorListener
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
@@ -44,77 +45,34 @@ class NetworkServiceAdapter constructor(context: Context) {
         return StringRequest(Request.Method.GET, BASE_URL + path, responseListener, errorListener)
     }
 
-    fun getAlbums(onComplete: (resp: List<Album>) -> Unit, onError: (error: VolleyError) -> Unit) {
-        requestQueue.add(
-            getRequest(
-                "albums",
-                { response ->
-                    try {
-                        val resp = JSONArray(response)
-                        val list = mutableListOf<Album>()
-                        for (i in 0 until resp.length()) {
-                            val item = resp.getJSONObject(i)
-                            list.add(
-                                Album(
-                                    id = item.getInt("id"),
-                                    name = item.getString("name"),
-                                    cover = item.getString("cover"),
-                                    recordLabel = item.getString("recordLabel"),
-                                    releaseDate = item.getString("releaseDate"),
-                                    genre = item.getString("genre"),
-                                    description = item.getString("description")
-                                )
-                            )
-                        }
-                        onComplete(list)
-                    } catch (e: Exception) {
-                        Log.e("NetworkServiceAdapter", "Error parsing albums", e)
-                        onError(VolleyError(e))
-                    }
-                },
-                { error ->
-                    Log.e("NetworkServiceAdapter", "Error fetching albums", error)
-                    onError(error)
-                })
+        fun get(
+        path: String,
+        responseListener: Response.Listener<String>,
+        errorListener: Response.ErrorListener
+    ) {
+        val request:StringRequest = StringRequest(
+            Request.Method.GET,
+            BASE_URL + path,
+            responseListener,
+            errorListener
         )
+        requestQueue.add(request);
     }
 
-    fun createAlbum(
-        name: String,
-        cover: String,
-        releaseDate: String,
-        description: String,
-        genre: String,
-        recordLabel: String,
-        onComplete: () -> Unit,
-        onError: (VolleyError) -> Unit
+    fun post(
+        path: String,
+        jsonBody: JSONObject,
+        responseListener: Response.Listener<JSONObject>,
+        errorListener: Response.ErrorListener
     ) {
-        val jsonBody = JSONObject().apply {
-            put("name", name)
-            put("cover", cover)
-            put("releaseDate", releaseDate)
-            put("description", description)
-            put("genre", genre)
-            put("recordLabel", recordLabel)
-        }
-        val request = JsonObjectRequest(
+        val request:JsonObjectRequest = JsonObjectRequest(
             Request.Method.POST,
-            BASE_URL + "albums",
+            BASE_URL + path,
             jsonBody,
-            { _ -> onComplete() },
-            { error ->
-                val responseData = error.networkResponse?.data
-                if (responseData == null) {
-                    onError(error)
-                } else {
-                    val jsonResponse = JSONObject(String(responseData, Charsets.UTF_8))
-                    val stringError = jsonResponse.optString("message", "unknown error")
-                    Log.d("Network-CreateAlbum", stringError)
-                    onError(VolleyError(stringError))
-                }
-            }
+            responseListener,
+            errorListener
         )
-        requestQueue.add(request)
+        requestQueue.add(request);
     }
 
     fun getCollectors(

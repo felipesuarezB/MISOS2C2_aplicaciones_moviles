@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.android.volley.VolleyError
 import com.example.viniloapp.models.AlbumDetail
 import com.example.viniloapp.network.AlbumService
+import com.example.viniloapp.repositories.AlbumRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,7 +29,7 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-    private val albumService = AlbumService()
+    private val albumRepository = AlbumRepository(application)
 
     init {
         Log.d("AlbumDetailViewModel", "Initializing view model")
@@ -40,7 +41,7 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
 
         viewModelScope.launch {
             try {
-                val albumDetail = albumService.getAlbumDetail(albumId)
+                val albumDetail = albumRepository.getAlbumDetail(albumId)
                 _albumDetail.value = albumDetail
             } catch (e: VolleyError) {
                 Log.e("AlbumDetailViewModel", "Error loading detail", e)

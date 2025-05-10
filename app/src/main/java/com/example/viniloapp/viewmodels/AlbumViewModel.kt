@@ -12,6 +12,7 @@ import com.android.volley.VolleyError
 import com.example.viniloapp.models.Album
 import com.example.viniloapp.network.AlbumService
 import com.example.viniloapp.network.NetworkServiceAdapter
+import com.example.viniloapp.repositories.AlbumRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -39,7 +40,7 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-    private val albumService = AlbumService()
+    private val albumRepository = AlbumRepository(application)
 
     init {
         Log.d("AlbumViewModel", "ViewModel inicializado")
@@ -53,7 +54,7 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch {
             try {
-                val albums = albumService.getAlbums()
+                val albums = albumRepository.getAlbums()
                 _albums.value = albums
             } catch (e: VolleyError) {
                 Log.e("AlbumViewModel", "Error al cargar álbumes", e)
@@ -88,7 +89,7 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                albumService.createAlbum(jsonBody)
+                albumRepository.createAlbum(jsonBody)
                 _creationResult.postValue("Álbum creado exitosamente")            } catch (error: VolleyError) {
                 val responseData = error.networkResponse.data
                 val jsonResponse = JSONObject(String(responseData, Charsets.UTF_8))
@@ -102,7 +103,6 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
                 _isLoading.value = false
             }
         }
-
     }
 
     fun clearCreationResult() {

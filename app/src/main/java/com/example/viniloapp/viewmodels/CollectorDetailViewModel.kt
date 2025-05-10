@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.android.volley.VolleyError
 import com.example.viniloapp.models.CollectorDetail
 import com.example.viniloapp.network.CollectorService
+import com.example.viniloapp.repositories.CollectorRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,7 +29,7 @@ class CollectorDetailViewModel(application: Application) : AndroidViewModel(appl
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-    private val collectorService = CollectorService()
+    private val collectorRepository = CollectorRepository(application)
 
     init {
         Log.d("CollectorDetailViewModel", "Initializing view model")
@@ -40,7 +41,7 @@ class CollectorDetailViewModel(application: Application) : AndroidViewModel(appl
 
         viewModelScope.launch {
             try {
-                val collector = collectorService.getCollectorDetail(collectorId)
+                val collector = collectorRepository.getCollectorDetail(collectorId)
                 _collectorDetail.value = collector
             } catch (e: VolleyError) {
                 Log.e("CollectorDetailViewModel", e.toString())

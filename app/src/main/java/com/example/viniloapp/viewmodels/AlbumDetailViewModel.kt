@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.android.volley.VolleyError
 import com.example.viniloapp.models.AlbumDetail
 import com.example.viniloapp.network.AlbumService
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +28,7 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val albumService = AlbumService()
 
     init {
         Log.d("AlbumDetailViewModel", "Initializing view model")
@@ -37,20 +39,18 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
         _error.value = ""
 
         viewModelScope.launch {
-            val albumService = AlbumService()
-            albumService.getAlbumDetail(
-                albumId,
-                { album ->
-                    _albumDetail.value = album
-                    _isLoading.value = false
-                },
-                { e ->
-                    Log.e("AlbumDetailViewModel", "Error loading detail", e)
-                    _error.value = "Error al cargar el álbum: ${e.message}"
-                    _isLoading.value = false
-
-                }
-            )
+            try {
+                val albumDetail = albumService.getAlbumDetail(albumId)
+                _albumDetail.value = albumDetail
+            } catch (e: VolleyError) {
+                Log.e("AlbumDetailViewModel", "Error loading detail", e)
+                _error.value = "Error al cargar el álbum: ${e.message}"
+            } catch (e: Exception) {
+                Log.e("AlbumDetailViewModel", "Error loading detail", e)
+                _error.value = "Error desconocido al cargar el álbum"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 

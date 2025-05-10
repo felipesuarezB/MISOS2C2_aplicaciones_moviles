@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.androidx.espresso.contrib)
     kapt("com.github.bumptech.glide:compiler:4.16.0")

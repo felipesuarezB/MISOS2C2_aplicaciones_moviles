@@ -1,25 +1,18 @@
 package com.example.viniloapp.network
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
-import com.android.volley.Response.ErrorListener
-import com.android.volley.VolleyError
+
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.viniloapp.models.Album
-import com.example.viniloapp.models.Collector
-import com.example.viniloapp.models.CollectorDetail
-import com.example.viniloapp.models.Comment
-import com.example.viniloapp.models.Performer
-import com.example.viniloapp.models.CollectorAlbum
-import com.example.viniloapp.models.AlbumDetail
-import com.example.viniloapp.models.Track
-import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
+
 
 class NetworkServiceAdapter constructor(context: Context) {
     companion object {
@@ -45,32 +38,26 @@ class NetworkServiceAdapter constructor(context: Context) {
         return StringRequest(Request.Method.GET, BASE_URL + path, responseListener, errorListener)
     }
 
-        fun get(
-        path: String,
-        responseListener: Response.Listener<String>,
-        errorListener: Response.ErrorListener
-    ) {
-        val request:StringRequest = StringRequest(
+    suspend fun get(path: String): String = suspendCoroutine { cont ->
+        val request = StringRequest(
             Request.Method.GET,
             BASE_URL + path,
-            responseListener,
-            errorListener
+            { response -> cont.resume(response) },
+            { error -> cont.resumeWithException(error) }
         )
-        requestQueue.add(request);
+        requestQueue.add(request)
     }
 
-    fun post(
+    suspend fun post(
         path: String,
-        jsonBody: JSONObject,
-        responseListener: Response.Listener<JSONObject>,
-        errorListener: Response.ErrorListener
-    ) {
-        val request:JsonObjectRequest = JsonObjectRequest(
+        jsonBody: JSONObject
+    ): JSONObject = suspendCoroutine { cont ->
+        val request = JsonObjectRequest(
             Request.Method.POST,
             BASE_URL + path,
             jsonBody,
-            responseListener,
-            errorListener
+            { response -> cont.resume(response) },
+            { error -> cont.resumeWithException(error) }
         )
         requestQueue.add(request);
     }

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import com.android.volley.VolleyError
 import com.example.viniloapp.models.Collector
 import com.example.viniloapp.network.CollectorService
 import com.example.viniloapp.network.NetworkServiceAdapter
@@ -43,21 +44,20 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
         _isLoading.value = true
         _error.value = ""
 
-        collectorService.getCollectors(
-            onComplete = { response ->
-                Log.d("CollectorViewModel", "Respuesta recibida: ${response.size} coleccionistas")
-                response.forEach { collector ->
-                    Log.d("CollectorViewModel", "Name: ${collector.name}, Telephone: ${collector.telephone}, Email: ${collector.email}")
-                }
-                _collectors.value = response
-                _isLoading.value = false
-            },
-            onError = { error ->
-                Log.e("CollectorViewModel", "Error al cargar coleccionistas", error)
-                _error.value = "Error al cargar los coleccionistas: ${error.message}"
+        viewModelScope.launch {
+            try {
+                val collector = collectorService.getCollectors()
+                _collectors.value = collector
+            } catch (e: VolleyError) {
+                Log.e("CollectorViewModel", "VolleyError getting collectors: $e.toString()")
+                _error.value = e.message.toString()
+            } catch (e: Exception) {
+                Log.e("CollectorViewModel", "Error getting collectors: $e.toString()")
+                _error.value = "Error desconocido al cargar los coleccionistas"
+            } finally {
                 _isLoading.value = false
             }
-        )
+        }
     }
     override fun onCleared() {
         super.onCleared()

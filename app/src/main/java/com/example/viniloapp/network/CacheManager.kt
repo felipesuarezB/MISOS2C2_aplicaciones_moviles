@@ -18,7 +18,6 @@ class CacheManager(context: Context) {
         }
     }
 
-    // Collector cache
     private var collectorDetails: LruCache<Int, CollectorDetail> = LruCache(3)
     fun cacheCollectorDetails(collectorId: Int, collector: CollectorDetail){
         if (collectorDetails[collectorId] == null){
@@ -51,7 +50,6 @@ class CacheManager(context: Context) {
         collectors = null
     }
 
-    // Album cache
     private var albumDetail: LruCache<Int, AlbumDetail> = LruCache(3)
     fun cacheAlbumDetail(albumId: Int, album: AlbumDetail){
         if (albumDetail[albumId] == null){

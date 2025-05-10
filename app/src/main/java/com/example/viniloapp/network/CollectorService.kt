@@ -1,10 +1,7 @@
 package com.example.viniloapp.network
 
-import android.util.Log
-import com.android.volley.VolleyError
 import com.example.viniloapp.MyApplication
 import com.example.viniloapp.models.Album
-import com.example.viniloapp.models.AlbumDetail
 import com.example.viniloapp.models.Collector
 import com.example.viniloapp.models.CollectorAlbum
 import com.example.viniloapp.models.CollectorDetail
@@ -12,9 +9,6 @@ import com.example.viniloapp.models.Comment
 import com.example.viniloapp.models.Performer
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class CollectorService(
     private val networkServiceAdapter: NetworkServiceAdapter =

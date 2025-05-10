@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.R
-import com.example.viniloapp.databinding.FragmentCollectorListBinding
 import com.example.viniloapp.ui.adapters.CollectorsAdapter
 import com.example.viniloapp.viewmodels.CollectorViewModel
 
@@ -38,7 +37,6 @@ class CollectorListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        // Hide back button in main view
         (requireActivity() as androidx.appcompat.app.AppCompatActivity).supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(false)
             setDisplayShowHomeEnabled(false)

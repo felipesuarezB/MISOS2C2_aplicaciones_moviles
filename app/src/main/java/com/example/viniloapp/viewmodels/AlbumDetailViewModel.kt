@@ -39,18 +39,18 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
         _isLoading.value = true
         _error.value = ""
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val albumDetail = albumRepository.getAlbumDetail(albumId)
-                _albumDetail.value = albumDetail
+                _albumDetail.postValue(albumDetail)
             } catch (e: VolleyError) {
                 Log.e("AlbumDetailViewModel", "Error loading detail", e)
-                _error.value = "Error al cargar el álbum: ${e.message}"
+                _error.postValue("Error al cargar el álbum: ${e.message}")
             } catch (e: Exception) {
                 Log.e("AlbumDetailViewModel", "Error loading detail", e)
-                _error.value = "Error desconocido al cargar el álbum"
+                _error.postValue("Error desconocido al cargar el álbum")
             } finally {
-                _isLoading.value = false
+                _isLoading.postValue(false)
             }
         }
     }

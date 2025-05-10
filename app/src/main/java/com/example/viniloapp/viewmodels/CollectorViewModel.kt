@@ -43,18 +43,18 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
         _isLoading.value = true
         _error.value = ""
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val collector = collectorRepository.getCollectors()
-                _collectors.value = collector
+                _collectors.postValue(collector)
             } catch (e: VolleyError) {
                 Log.e("CollectorViewModel", "VolleyError getting collectors: $e.toString()")
-                _error.value = e.message.toString()
+                _error.postValue(e.message.toString())
             } catch (e: Exception) {
                 Log.e("CollectorViewModel", "Error getting collectors: $e.toString()")
-                _error.value = "Error desconocido al cargar los coleccionistas"
+                _error.postValue("Error desconocido al cargar los coleccionistas")
             } finally {
-                _isLoading.value = false
+                _isLoading.postValue(false)
             }
         }
     }

@@ -54,15 +54,15 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val albums = albumRepository.getAlbums()
-                _albums.value = albums
+                _albums.postValue(albums)
             } catch (e: VolleyError) {
                 Log.e("AlbumViewModel", "Error al cargar álbumes", e)
-                _error.value = "Error al cargar los álbumes: ${e.message}"
+                _error.postValue("Error al cargar los álbumes: ${e.message}")
             } catch (e: Exception) {
                 Log.e("AlbumViewModel", "Error al cargar álbumes", e)
-                _error.value = "Error desconocido al cargar los álbumes"
+                _error.postValue("Error desconocido al cargar los álbumes")
             } finally {
-                _isLoading.value = false
+                _isLoading.postValue(false)
             }
         }
     }
@@ -86,20 +86,21 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.value = true
+            _isLoading.postValue(true)
             try {
                 albumRepository.createAlbum(jsonBody)
-                _creationResult.postValue("Álbum creado exitosamente")            } catch (error: VolleyError) {
+                _creationResult.postValue("Álbum creado exitosamente")
+            } catch (error: VolleyError) {
                 val responseData = error.networkResponse.data
                 val jsonResponse = JSONObject(String(responseData, Charsets.UTF_8))
                 val stringError = jsonResponse.optString("message", "unknown error")
                 Log.d("Network-CreateAlbum", stringError)
-                _error.value = stringError
+                _error.postValue(stringError)
             } catch (error: Exception) {
                 Log.d("Network-CreateAlbum", error.toString())
-                _error.value = "Error desconocido al crear el album"
+                _error.postValue("Error desconocido al crear el album")
             } finally {
-                _isLoading.value = false
+                _isLoading.postValue(false)
             }
         }
     }

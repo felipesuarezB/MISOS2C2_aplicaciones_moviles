@@ -39,7 +39,7 @@ class CollectorDetailViewModel(application: Application) : AndroidViewModel(appl
         _isLoading.value = true
         _error.value = ""
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val collector = collectorRepository.getCollectorDetail(collectorId)
                 _collectorDetail.value = collector

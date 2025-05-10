@@ -39,7 +39,7 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
         _isLoading.value = true
         _error.value = ""
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val albumDetail = albumRepository.getAlbumDetail(albumId)
                 _albumDetail.value = albumDetail

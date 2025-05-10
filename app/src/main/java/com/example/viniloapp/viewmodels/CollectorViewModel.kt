@@ -43,7 +43,7 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
         _isLoading.value = true
         _error.value = ""
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val collector = collectorRepository.getCollectors()
                 _collectors.value = collector

@@ -17,7 +17,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 class AlbumViewModel(application: Application) : AndroidViewModel(application) {
@@ -52,7 +51,7 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
         _isLoading.value = true
         _error.value = ""
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val albums = albumRepository.getAlbums()
                 _albums.value = albums
@@ -86,7 +85,7 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
             put("recordLabel", recordLabel)
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             try {
                 albumRepository.createAlbum(jsonBody)

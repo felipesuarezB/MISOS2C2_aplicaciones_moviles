@@ -3,7 +3,6 @@ package com.example.viniloapp.network
 import android.content.Context
 import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
@@ -28,14 +27,6 @@ class NetworkServiceAdapter constructor(context: Context) {
 
     private val requestQueue: RequestQueue by lazy {
         Volley.newRequestQueue(context.applicationContext)
-    }
-
-    private fun getRequest(
-        path: String,
-        responseListener: Response.Listener<String>,
-        errorListener: Response.ErrorListener
-    ): StringRequest {
-        return StringRequest(Request.Method.GET, BASE_URL + path, responseListener, errorListener)
     }
 
     suspend fun get(path: String): String = suspendCoroutine { cont ->

@@ -9,12 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.android.volley.VolleyError
 import com.example.viniloapp.models.Collector
 import com.example.viniloapp.network.CollectorService
-import com.example.viniloapp.network.NetworkServiceAdapter
+import com.example.viniloapp.repositories.CollectorRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CollectorViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -32,7 +31,7 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-    private val collectorService = CollectorService()
+    private val collectorRepository = CollectorRepository(application)
 
     init {
         Log.d("CollectorViewModel", "ViewModel inicializado")
@@ -46,7 +45,7 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
 
         viewModelScope.launch {
             try {
-                val collector = collectorService.getCollectors()
+                val collector = collectorRepository.getCollectors()
                 _collectors.value = collector
             } catch (e: VolleyError) {
                 Log.e("CollectorViewModel", "VolleyError getting collectors: $e.toString()")

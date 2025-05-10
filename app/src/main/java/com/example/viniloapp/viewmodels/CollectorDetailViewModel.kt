@@ -9,13 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.android.volley.VolleyError
 import com.example.viniloapp.models.CollectorDetail
-import com.example.viniloapp.network.CollectorService
 import com.example.viniloapp.repositories.CollectorRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CollectorDetailViewModel(application: Application) : AndroidViewModel(application) {
     private val _collectorDetail = MutableLiveData<CollectorDetail>()

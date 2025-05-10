@@ -20,9 +20,6 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
     private val _albums = MutableLiveData<List<Album>>()
     val albums: LiveData<List<Album>> = _albums
 
-    private val _currentAlbum = MutableLiveData<Album>()
-    val currentAlbum: LiveData<Album> = _currentAlbum
-
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 

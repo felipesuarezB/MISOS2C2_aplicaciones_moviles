@@ -1,19 +1,12 @@
 package com.example.viniloapp.network
 
 import android.util.Log
-import com.android.volley.Request
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.JsonObjectRequest
 import com.example.viniloapp.MyApplication
 import com.example.viniloapp.models.Album
 import com.example.viniloapp.models.AlbumDetail
 import com.example.viniloapp.models.Track
-import com.example.viniloapp.network.NetworkServiceAdapter.Companion.BASE_URL
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class AlbumService(
     private val networkServiceAdapter: NetworkServiceAdapter =

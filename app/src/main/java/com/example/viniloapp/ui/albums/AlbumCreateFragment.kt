@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.viniloapp.R
 import com.example.viniloapp.databinding.FragmentAlbumCreateBinding
 import com.example.viniloapp.viewmodels.AlbumViewModel
 import java.util.Calendar

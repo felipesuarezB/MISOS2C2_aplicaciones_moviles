@@ -9,13 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.android.volley.VolleyError
 import com.example.viniloapp.models.AlbumDetail
-import com.example.viniloapp.network.AlbumService
 import com.example.viniloapp.repositories.AlbumRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class AlbumDetailViewModel(application: Application) : AndroidViewModel(application) {
     private val _albumDetail = MutableLiveData<AlbumDetail>()

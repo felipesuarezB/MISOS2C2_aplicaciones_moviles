@@ -1,19 +1,12 @@
 package com.example.viniloapp.network
 
 import android.util.Log
-import com.android.volley.Request
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.JsonObjectRequest
 import com.example.viniloapp.MyApplication
 import com.example.viniloapp.models.Album
 import com.example.viniloapp.models.AlbumDetail
 import com.example.viniloapp.models.Track
-import com.example.viniloapp.network.NetworkServiceAdapter.Companion.BASE_URL
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class AlbumService(
     private val networkServiceAdapter: NetworkServiceAdapter =
@@ -22,22 +15,20 @@ class AlbumService(
 
 
     suspend fun getAlbums(): List<Album> {
-        val response = networkServiceAdapter.get("albums")
         Log.d("AlbumService", "Parsing")
-        val resp = JSONArray(response)
+        val resp = JSONArray(networkServiceAdapter.get("albums"))
         val list = mutableListOf<Album>()
 
         for (i in 0 until resp.length()) {
-            val item = resp.getJSONObject(i)
             list.add(
                 Album(
-                    id = item.getInt("id"),
-                    name = item.getString("name"),
-                    cover = item.getString("cover"),
-                    recordLabel = item.getString("recordLabel"),
-                    releaseDate = item.getString("releaseDate"),
-                    genre = item.getString("genre"),
-                    description = item.getString("description")
+                    id = resp.getJSONObject(i).getInt("id"),
+                    name = resp.getJSONObject(i).getString("name"),
+                    cover = resp.getJSONObject(i).getString("cover"),
+                    recordLabel = resp.getJSONObject(i).getString("recordLabel"),
+                    releaseDate = resp.getJSONObject(i).getString("releaseDate"),
+                    genre = resp.getJSONObject(i).getString("genre"),
+                    description = resp.getJSONObject(i).getString("description")
                 )
             )
         }
@@ -45,25 +36,24 @@ class AlbumService(
     }
 
     suspend fun getAlbumDetail(albumId: Int):AlbumDetail {
-        val response = networkServiceAdapter.get("albums/$albumId")
-        val albumJson = JSONObject(response)
+        val albumJson = JSONObject(networkServiceAdapter.get("albums/$albumId"))
         val tracksArray = albumJson.getJSONArray("tracks")
         val tracks = mutableListOf<Track>()
 
         for (i in 0 until tracksArray.length()) {
-            val trackJson = tracksArray.getJSONObject(i)
-            val track = Track(
-                id = trackJson.getInt("id"),
-                name = trackJson.getString("name"),
-                duration = trackJson.getString("duration")
+            Log.d("NetworkServiceAdapter", "Processing track: ${tracksArray.getJSONObject(i).getString("name")}")
+            tracks.add(
+                Track(
+                    id = tracksArray.getJSONObject(i).getInt("id"),
+                    name = tracksArray.getJSONObject(i).getString("name"),
+                    duration = tracksArray.getJSONObject(i).getString("duration")
+                )
             )
-            Log.d("NetworkServiceAdapter", "Processing track: ${track.name}")
-            tracks.add(track)
         }
 
         Log.d("NetworkServiceAdapter", "Total tracks processed: ${tracks.size}")
 
-        val albumDetail = AlbumDetail(
+        return AlbumDetail(
             id = albumJson.getInt("id"),
             name = albumJson.getString("name"),
             cover = albumJson.getString("cover"),
@@ -73,8 +63,6 @@ class AlbumService(
             recordLabel = albumJson.getString("recordLabel"),
             tracks = tracks
         )
-
-        return albumDetail
     }
 
     suspend fun createAlbum(jsonBody: JSONObject) {

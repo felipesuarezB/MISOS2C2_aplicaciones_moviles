@@ -1,10 +1,7 @@
 package com.example.viniloapp.network
 
-import android.util.Log
-import com.android.volley.VolleyError
 import com.example.viniloapp.MyApplication
 import com.example.viniloapp.models.Album
-import com.example.viniloapp.models.AlbumDetail
 import com.example.viniloapp.models.Collector
 import com.example.viniloapp.models.CollectorAlbum
 import com.example.viniloapp.models.CollectorDetail
@@ -12,9 +9,6 @@ import com.example.viniloapp.models.Comment
 import com.example.viniloapp.models.Performer
 import org.json.JSONArray
 import org.json.JSONObject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 class CollectorService(
     private val networkServiceAdapter: NetworkServiceAdapter =
@@ -22,17 +16,15 @@ class CollectorService(
 ) {
 
     suspend fun getCollectors(): List<Collector> {
-        val response = networkServiceAdapter.get("collectors")
-        val resp = JSONArray(response)
+        val resp = JSONArray(networkServiceAdapter.get("collectors"))
         val list = mutableListOf<Collector>()
         for (i in 0 until resp.length()) {
-            val item = resp.getJSONObject(i)
             list.add(
                 Collector(
-                    id = item.getInt("id"),
-                    name = item.getString("name"),
-                    telephone = item.getString("telephone"),
-                    email = item.getString("email")
+                    id = resp.getJSONObject(i).getInt("id"),
+                    name = resp.getJSONObject(i).getString("name"),
+                    telephone = resp.getJSONObject(i).getString("telephone"),
+                    email = resp.getJSONObject(i).getString("email")
                 )
             )
         }
@@ -42,8 +34,7 @@ class CollectorService(
     suspend fun getCollectorDetail(
         collectorId: Int,
     ):CollectorDetail {
-        val response = networkServiceAdapter.get("collectors/$collectorId")
-        val item = JSONObject(response)
+        val item = JSONObject(networkServiceAdapter.get("collectors/$collectorId"))
         val collector = Collector(
             id = item.getInt("id"),
             name = item.getString("name"),

@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.android.volley.VolleyError
 import com.example.viniloapp.models.Collector
-import com.example.viniloapp.network.CollectorService
 import com.example.viniloapp.repositories.CollectorRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

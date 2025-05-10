@@ -30,27 +30,29 @@ class NetworkServiceAdapter constructor(context: Context) {
     }
 
     suspend fun get(path: String): String = suspendCoroutine { cont ->
-        val request = StringRequest(
-            Request.Method.GET,
-            BASE_URL + path,
-            { response -> cont.resume(response) },
-            { error -> cont.resumeWithException(error) }
+        requestQueue.add(
+            StringRequest(
+                Request.Method.GET,
+                BASE_URL + path,
+                { response -> cont.resume(response) },
+                { error -> cont.resumeWithException(error) }
+            )
         )
-        requestQueue.add(request)
     }
 
     suspend fun post(
         path: String,
         jsonBody: JSONObject
     ): JSONObject = suspendCoroutine { cont ->
-        val request = JsonObjectRequest(
-            Request.Method.POST,
-            BASE_URL + path,
-            jsonBody,
-            { response -> cont.resume(response) },
-            { error -> cont.resumeWithException(error) }
-        )
-        requestQueue.add(request);
+        requestQueue.add(
+            JsonObjectRequest(
+                Request.Method.POST,
+                BASE_URL + path,
+                jsonBody,
+                { response -> cont.resume(response) },
+                { error -> cont.resumeWithException(error) }
+            )
+        );
     }
 
 }

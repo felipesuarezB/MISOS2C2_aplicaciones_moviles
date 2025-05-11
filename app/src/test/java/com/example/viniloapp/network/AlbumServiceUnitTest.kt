@@ -62,4 +62,11 @@ class AlbumServiceUnitTest {
         }
         assertEquals("Network error", exception.message)
     }
+
+    @Test
+    fun `createAlbum should call post with correct parameters`() = runTest {
+        val mockJsonBody = mock<org.json.JSONObject>()
+        albumService.createAlbum(mockJsonBody)
+        verify(mockNetworkAdapter).post(eq("albums"), eq(mockJsonBody))
+    }
 }

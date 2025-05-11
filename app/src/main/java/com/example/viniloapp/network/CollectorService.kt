@@ -26,32 +26,5 @@ class CollectorService(
     ): CollectorDetail {
         val json = networkServiceAdapter.get("collectors/$collectorId")
         return Gson().fromJson(json, CollectorDetail::class.java)
-                name = albumDetailObj.optString("name"),
-                cover = albumDetailObj.optString("cover"),
-                releaseDate = albumDetailObj.optString("releaseDate"),
-                description = albumDetailObj.optString("description"),
-                genre = albumDetailObj.optString("genre"),
-                recordLabel = albumDetailObj.optString("recordLabel")
-            )
-
-            val fullAlbum = CollectorAlbum(
-                id = albumId,
-                price = price,
-                status = status,
-                album = album
-            )
-
-            fullAlbum
-        }
-
-        return CollectorDetail(
-            id = collector.id,
-            name = collector.name,
-            telephone = collector.telephone,
-            email = collector.email,
-            comments = comments,
-            favoritePerformers = performers,
-            collectorAlbums = collectorAlbums
-        )
     }
 }

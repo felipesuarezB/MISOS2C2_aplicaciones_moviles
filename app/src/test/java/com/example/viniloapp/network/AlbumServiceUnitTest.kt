@@ -21,31 +21,31 @@ class AlbumServiceUnitTest {
 
     @Test
     fun `getAlbums should return list of albums when successful`() = runTest {
-        val mockAlbums = listOf(
-            Album(
-                id = 1,
-                name = "Thriller",
-                cover = "https://example.com/thriller.jpg",
-                releaseDate = "1982-11-30",
-                description = "One of the best-selling albums of all time.",
-                genre = "Pop",
-                recordLabel = "Epic"
-            ),
-            Album(
-                id = 2,
-                name = "Back in Black",
-                cover = "https://example.com/backinblack.jpg",
-                releaseDate = "1980-07-25",
-                description = "AC/DC's best-selling album.",
-                genre = "Rock",
-                recordLabel = "Atlantic"
-            )
-        )
+        // Simula la respuesta JSON que regresaría el endpoint
+        val mockAlbumsJson = """
+            [
+                {
+                    "id": 1,
+                    "name": "Thriller",
+                    "cover": "https://example.com/thriller.jpg",
+                    "releaseDate": "1982-11-30",
+                    "description": "One of the best-selling albums of all time.",
+                    "genre": "Pop",
+                    "recordLabel": "Epic"
+                },
+                {
+                    "id": 2,
+                    "name": "Back in Black",
+                    "cover": "https://example.com/backinblack.jpg",
+                    "releaseDate": "1980-07-25",
+                    "description": "AC/DC's best-selling album.",
+                    "genre": "Rock",
+                    "recordLabel": "Atlantic"
+                }
+            ]
+        """.trimIndent()
 
-        whenever(mockNetworkAdapter.getAlbums(any(), any())).thenAnswer {
-            val onComplete = it.getArgument<(List<Album>) -> Unit>(0)
-            onComplete(mockAlbums)
-        }
+        whenever(mockNetworkAdapter.get("albums")).thenReturn(mockAlbumsJson)
 
         val result = albumService.getAlbums()
         assertEquals(2, result.size)
@@ -55,17 +55,11 @@ class AlbumServiceUnitTest {
 
     @Test
     fun `getAlbums should throw exception when error occurs`() = runTest {
-        val volleyError = VolleyError("Network error")
+        whenever(mockNetworkAdapter.get("albums")).thenThrow(RuntimeException("Network error"))
 
-        whenever(mockNetworkAdapter.getAlbums(any(), any())).thenAnswer {
-            val onError = it.getArgument<(VolleyError) -> Unit>(1)
-            onError(volleyError)
-        }
-
-        val exception = assertFailsWith<Exception> {
+        val exception = assertFailsWith<RuntimeException> {
             albumService.getAlbums()
         }
-
         assertEquals("Network error", exception.message)
     }
 }

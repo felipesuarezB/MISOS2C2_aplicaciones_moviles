@@ -5,6 +5,7 @@ import com.example.viniloapp.models.Album
 import com.example.viniloapp.models.AlbumDetail
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.json.JSONObject
 
 class AlbumService(
     private val networkServiceAdapter: NetworkServiceAdapter =

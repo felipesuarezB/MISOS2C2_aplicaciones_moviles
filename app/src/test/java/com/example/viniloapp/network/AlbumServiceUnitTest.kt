@@ -1,13 +1,11 @@
 package com.example.viniloapp.network
 
-import com.example.viniloapp.models.Album
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import com.android.volley.VolleyError
 
 class AlbumServiceUnitTest {
 
@@ -21,7 +19,6 @@ class AlbumServiceUnitTest {
 
     @Test
     fun `getAlbums should return list of albums when successful`() = runTest {
-        // Simula la respuesta JSON que regresaría el endpoint
         val mockAlbumsJson = """
             [
                 {
@@ -61,5 +58,12 @@ class AlbumServiceUnitTest {
             albumService.getAlbums()
         }
         assertEquals("Network error", exception.message)
+    }
+
+    @Test
+    fun `createAlbum should call post with correct parameters`() = runTest {
+        val mockJsonBody = mock<org.json.JSONObject>()
+        albumService.createAlbum(mockJsonBody)
+        verify(mockNetworkAdapter).post(eq("albums"), eq(mockJsonBody))
     }
 }

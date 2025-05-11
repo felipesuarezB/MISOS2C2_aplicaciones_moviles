@@ -6,8 +6,6 @@ import org.junit.Test
 import org.mockito.kotlin.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import com.android.volley.VolleyError
-import com.example.viniloapp.models.Collector
 
 class CollectorServiceUnitTest {
 

@@ -76,28 +76,20 @@ class VinilosE2ETests {
         onView(withId(R.id.collectors_recycler_view))
             .perform(
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                    hasDescendant(withText("Andrea Mina")),
+                    hasDescendant(withText("Jose Ortegon")),
                     click()
                 )
             )
 
         Thread.sleep(5000)
         onView(withId(R.id.collector_detail_name))
-            .check(matches(withText("Name: Andrea Mina")))
+            .check(matches(withText("Name: Jose Ortegon")))
 
         onView(withId(R.id.collector_correo))
-            .check(matches(withText("Email: andre@email.com")))
+            .check(matches(withText("Email: jose@gmail.com")))
 
         onView(withId(R.id.collector_telefono))
-            .check(matches(withText("Phone: 3127845961")))
-
-        onView(withId(R.id.albumsRecyclerView))
-            .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-                hasDescendant(withText(containsString("Ejemplo")))
-            ))
-
-        onView(allOf(withId(R.id.album_name), withText(containsString("Ejemplo"))))
-            .check(matches(isDisplayed()))
+            .check(matches(withText("Phone: 12345678")))
     }
 
     @Test

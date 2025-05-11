@@ -1,10 +1,8 @@
 package com.example.viniloapp.network
 
-import android.util.Log
 import com.example.viniloapp.MyApplication
 import com.example.viniloapp.models.Album
 import com.example.viniloapp.models.AlbumDetail
-import com.example.viniloapp.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

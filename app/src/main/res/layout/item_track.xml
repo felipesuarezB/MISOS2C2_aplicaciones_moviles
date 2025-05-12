@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="track"
+            type="com.example.viniloapp.models.Track" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:elevation="2dp"
+        android:layout_marginBottom="8dp">
+            <TextView
+                android:id="@+id/track_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{track.name}'
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#212121" />
+
+            <TextView
+                android:id="@+id/track_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{"Duración: " + track.duration}'
+                android:textSize="14sp"
+                android:textColor="#757575"
+                android:layout_marginTop="4dp" />
+    </LinearLayout>
+</layout> 

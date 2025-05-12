@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.databinding.FragmentCollectorDetailBinding
@@ -15,12 +17,16 @@ import com.example.viniloapp.ui.adapters.CollectorAlbumAdapter
 import com.example.viniloapp.viewmodels.CollectorDetailViewModel
 import com.example.viniloapp.ui.adapters.CommentAdapter
 
-
 class CollectorDetailFragment: Fragment() {
     private var _binding: FragmentCollectorDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: CollectorDetailViewModel
     private lateinit var collectorAlbumAdapter: CollectorAlbumAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,14 +35,18 @@ class CollectorDetailFragment: Fragment() {
     ): View {
         Log.d("CollectorDetailFragment", "Creating Collector Detail view")
         _binding = FragmentCollectorDetailBinding.inflate(inflater, container, false)
-        return  binding.root
-
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CollectorDetailViewModel::class.java)
 
+        // Show back button in detail view
+        (requireActivity() as androidx.appcompat.app.AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
 
         binding.progressBar.visibility = View.VISIBLE
 
@@ -47,8 +57,8 @@ class CollectorDetailFragment: Fragment() {
         collectorAlbumAdapter = CollectorAlbumAdapter()
         albumsRecyclerView.adapter = collectorAlbumAdapter
 
-
         viewModel.loadCollectorDetail(collectorId)
+        Log.d("CollectorDetails", "SYNC");
 
         viewModel.collectorDetail.observe(viewLifecycleOwner, Observer { collectorDetail ->
             collectorDetail?.let {
@@ -63,6 +73,16 @@ class CollectorDetailFragment: Fragment() {
                 commentsRecyclerView.adapter = CommentAdapter(collectorDetail.comments)
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                findNavController().navigateUp()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onDestroyView() {

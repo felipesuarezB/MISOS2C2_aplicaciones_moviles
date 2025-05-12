@@ -35,7 +35,7 @@ class VinilosE2ETests {
             .perform(click())
 
         onView(withId(R.id.albums_recycler_view))
-            .check(matches(hasDescendant(withText("From Zero"))));
+            .check(matches(hasDescendant(withText("Buscando América Prueba"))));
 
         Thread.sleep(5000)
         onView(withId(R.id.albums_recycler_view))
@@ -76,27 +76,62 @@ class VinilosE2ETests {
         onView(withId(R.id.collectors_recycler_view))
             .perform(
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                    hasDescendant(withText("Andrea Mina")),
+                    hasDescendant(withText("Jose Ortegon")),
                     click()
                 )
             )
 
         Thread.sleep(5000)
         onView(withId(R.id.collector_detail_name))
-            .check(matches(withText("Name: Andrea Mina")))
+            .check(matches(withText("Name: Jose Ortegon")))
 
         onView(withId(R.id.collector_correo))
-            .check(matches(withText("Email: andre@email.com")))
+            .check(matches(withText("Email: jose@gmail.com")))
 
         onView(withId(R.id.collector_telefono))
-            .check(matches(withText("Phone: 3127845961")))
+            .check(matches(withText("Phone: 12345678")))
+    }
 
-        onView(withId(R.id.albumsRecyclerView))
-            .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-                hasDescendant(withText(containsString("Ejemplo")))
-            ))
+    @Test
+    fun createAlbumFormFieldsExist() {
+        Thread.sleep(5000)
+        // Navegar a la sección de álbumes
+        onView(withId(R.id.navigation_albums)).perform(click())
+        Thread.sleep(2000)
+        // Oprimir el botón de crear álbum
+        onView(withId(R.id.button_add_album)).perform(click())
+        Thread.sleep(2000)
+        // Validar que los campos requeridos existen en el formulario
+        onView(withId(R.id.editTextAlbumName)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumCover)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumReleaseDate)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumDescription)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumGenre)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextAlbumRecordLabel)).check(matches(isDisplayed()))
+    }
 
-        onView(allOf(withId(R.id.album_name), withText(containsString("Ejemplo"))))
-            .check(matches(isDisplayed()))
+    @Test
+    fun detalleAlbum(){
+        Thread.sleep(5000)
+        // Navegar a la sección de álbumes
+        onView(withId(R.id.navigation_albums)).perform(click())
+        Thread.sleep(2000)
+        onView(withId(R.id.albums_recycler_view))
+            .perform(
+                RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                    hasDescendant(withText("Buscando América Prueba")),
+                    click()
+                )
+            )
+        Thread.sleep(5000)
+        onView(withId(R.id.album_record_label))
+            .check(matches(withText("Sello discográfico: Elektra")))
+
+        onView(withId(R.id.album_release_date))
+            .check(matches(withText("Fecha de lanzamiento: 1984-08-01T00:00:00.000Z")))
+
+        onView(withId(R.id.album_genre))
+            .check(matches(withText("Género: Salsa")))
+
     }
 }

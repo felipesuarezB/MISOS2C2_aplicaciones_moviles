@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(libs.androidx.espresso.contrib)
     kapt("com.github.bumptech.glide:compiler:4.16.0")
@@ -74,4 +75,9 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     testImplementation("junit:junit:4.13.2")
     testImplementation(kotlin("test"))
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+implementation("com.google.code.gson:gson:2.10.1")
+testImplementation("com.google.code.gson:gson:2.10.1")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 }

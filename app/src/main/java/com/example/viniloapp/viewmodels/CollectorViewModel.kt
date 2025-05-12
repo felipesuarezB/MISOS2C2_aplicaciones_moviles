@@ -6,14 +6,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import com.android.volley.VolleyError
 import com.example.viniloapp.models.Collector
-import com.example.viniloapp.network.CollectorService
-import com.example.viniloapp.network.NetworkServiceAdapter
+import com.example.viniloapp.repositories.CollectorRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CollectorViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -31,6 +30,7 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val collectorRepository = CollectorRepository(application)
 
     init {
         Log.d("CollectorViewModel", "ViewModel inicializado")
@@ -42,21 +42,20 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
         _isLoading.value = true
         _error.value = ""
 
-        NetworkServiceAdapter.getInstance(getApplication()).getCollectors(
-            onComplete = { response ->
-                Log.d("CollectorViewModel", "Respuesta recibida: ${response.size} coleccionistas")
-                response.forEach { collector ->
-                    Log.d("CollectorViewModel", "Name: ${collector.name}, Telephone: ${collector.telephone}, Email: ${collector.email}")
-                }
-                _collectors.value = response
-                _isLoading.value = false
-            },
-            onError = { error ->
-                Log.e("CollectorViewModel", "Error al cargar coleccionistas", error)
-                _error.value = "Error al cargar los coleccionistas: ${error.message}"
-                _isLoading.value = false
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val collector = collectorRepository.getCollectors()
+                _collectors.postValue(collector)
+            } catch (e: VolleyError) {
+                Log.e("CollectorViewModel", "VolleyError getting collectors: $e.toString()")
+                _error.postValue(e.message.toString())
+            } catch (e: Exception) {
+                Log.e("CollectorViewModel", "Error getting collectors: $e.toString()")
+                _error.postValue("Error desconocido al cargar los coleccionistas")
+            } finally {
+                _isLoading.postValue(false)
             }
-        )
+        }
     }
     override fun onCleared() {
         super.onCleared()

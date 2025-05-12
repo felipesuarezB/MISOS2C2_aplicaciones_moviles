@@ -5,25 +5,20 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import com.android.volley.VolleyError
 import com.example.viniloapp.models.Album
-import com.example.viniloapp.network.AlbumService
-import com.example.viniloapp.network.NetworkServiceAdapter
+import com.example.viniloapp.repositories.AlbumRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class AlbumViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _albums = MutableLiveData<List<Album>>()
     val albums: LiveData<List<Album>> = _albums
-
-    private val _currentAlbum = MutableLiveData<Album>()
-    val currentAlbum: LiveData<Album> = _currentAlbum
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -31,8 +26,13 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
+
+    private val _creationResult = MutableLiveData<String?>()
+    val creationResult: LiveData<String?> = _creationResult
+
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val albumRepository = AlbumRepository(application)
 
     init {
         Log.d("AlbumViewModel", "ViewModel inicializado")
@@ -43,44 +43,63 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
         Log.d("AlbumViewModel", "Iniciando carga de álbumes")
         _isLoading.value = true
         _error.value = ""
-        
-        NetworkServiceAdapter.getInstance(getApplication()).getAlbums(
-            onComplete = { response ->
-                Log.d("AlbumViewModel", "Respuesta recibida: ${response.size} álbumes")
-                response.forEach { album ->
-                    Log.d("AlbumViewModel", "Álbum: ${album.name}, Género: ${album.genre}")
-                }
-                _albums.value = response
-                _isLoading.value = false
-            },
-            onError = { error ->
-                Log.e("AlbumViewModel", "Error al cargar álbumes", error)
-                _error.value = "Error al cargar los álbumes: ${error.message}"
-                _isLoading.value = false
-            }
-        )
-    }
 
-    fun loadAlbumDetails(albumId: Int) {
-        viewModelScope.launch {
-            _isLoading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val albumService = AlbumService()
-                val albumsList = withContext(Dispatchers.IO) {
-                    albumService.getAlbums()
-                }
-                val album = albumsList.find { it.id == albumId }
-                if (album != null) {
-                    _currentAlbum.value = album
-                } else {
-                    _error.value = "Álbum no encontrado"
-                }
+                val albums = albumRepository.getAlbums()
+                _albums.postValue(albums)
+            } catch (e: VolleyError) {
+                Log.e("AlbumViewModel", "Error al cargar álbumes", e)
+                _error.postValue("Error al cargar los álbumes: ${e.message}")
             } catch (e: Exception) {
-                _error.value = e.message ?: "Error desconocido"
+                Log.e("AlbumViewModel", "Error al cargar álbumes", e)
+                _error.postValue("Error desconocido al cargar los álbumes")
             } finally {
-                _isLoading.value = false
+                _isLoading.postValue(false)
             }
         }
+    }
+
+    fun createAlbum(
+        name: String,
+        cover: String,
+        releaseDate: String,
+        description: String,
+        genre: String,
+        recordLabel: String
+    ) {
+
+        val jsonBody: JSONObject = JSONObject().apply {
+            put("name", name)
+            put("cover", cover)
+            put("releaseDate", releaseDate)
+            put("description", description)
+            put("genre", genre)
+            put("recordLabel", recordLabel)
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            _isLoading.postValue(true)
+            try {
+                albumRepository.createAlbum(jsonBody)
+                _creationResult.postValue("Álbum creado exitosamente")
+            } catch (error: VolleyError) {
+                val responseData = error.networkResponse.data
+                val jsonResponse = JSONObject(String(responseData, Charsets.UTF_8))
+                val stringError = jsonResponse.optString("message", "unknown error")
+                Log.d("Network-CreateAlbum", stringError)
+                _error.postValue(stringError)
+            } catch (error: Exception) {
+                Log.d("Network-CreateAlbum", error.toString())
+                _error.postValue("Error desconocido al crear el album")
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
+    }
+
+    fun clearCreationResult() {
+        _creationResult.value = null
     }
 
     override fun onCleared() {

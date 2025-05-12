@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_albumListFragment_to_albumDetailFragment"
             app:destination="@id/albumDetailFragment" />
+        <action
+            android:id="@+id/action_albumListFragment_to_albumCreateFragment"
+            app:destination="@id/albumCreateFragment" />
     </fragment>
 
     <fragment
@@ -36,11 +39,18 @@
 
     <fragment
         android:id="@+id/albumDetailFragment"
-        android:name="com.example.viniloapp.ui.fragments.AlbumDetailFragment"
+        android:name="com.example.viniloapp.ui.albums.AlbumDetailFragment"
         android:label="Detalle del Álbum">
         <argument
             android:name="albumId"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/albumCreateFragment"
+        android:name="com.example.viniloapp.ui.albums.AlbumCreateFragment"
+        android:label="Crear Álbum" />
+
+
 
 </navigation> 

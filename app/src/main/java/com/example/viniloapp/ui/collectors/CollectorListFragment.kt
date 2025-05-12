@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.R
-import com.example.viniloapp.databinding.FragmentCollectorListBinding
 import com.example.viniloapp.ui.adapters.CollectorsAdapter
 import com.example.viniloapp.viewmodels.CollectorViewModel
 
@@ -21,6 +20,11 @@ class CollectorListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CollectorsAdapter
     private lateinit var progressBar: View
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +36,11 @@ class CollectorListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("CollectorListFragment", "onViewCreated iniciado")
+        
+        (requireActivity() as androidx.appcompat.app.AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setDisplayShowHomeEnabled(false)
+        }
 
         recyclerView = view.findViewById(R.id.collectors_recycler_view)
         progressBar = view.findViewById(R.id.progress_bar)

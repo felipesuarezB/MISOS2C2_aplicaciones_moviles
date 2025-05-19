@@ -19,7 +19,11 @@
     <fragment
         android:id="@+id/navigation_artists"
         android:name="com.example.viniloapp.ui.artists.ArtistListFragment"
-        android:label="Artistas" />
+        android:label="Artistas">
+        <action
+            android:id="@+id/action_artistListFragment_to_artistDetailFragment"
+            app:destination="@id/artistDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_collectors"
@@ -51,6 +55,13 @@
         android:name="com.example.viniloapp.ui.albums.AlbumCreateFragment"
         android:label="Crear Álbum" />
 
-
+    <fragment
+        android:id="@+id/artistDetailFragment"
+        android:name="com.example.viniloapp.ui.artists.ArtistDetailFragment"
+        android:label="Detalle del Artista">
+        <argument
+            android:name="artistId"
+            app:argType="integer" />
+    </fragment>
 
 </navigation> 

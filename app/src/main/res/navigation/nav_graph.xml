@@ -14,9 +14,6 @@
         <action
             android:id="@+id/action_albumListFragment_to_albumCreateFragment"
             app:destination="@id/albumCreateFragment" />
-        <action
-    android:id="@+id/action_artistListFragment_to_prizeCreateFragment"
-    app:destination="@id/prizeCreateFragment" />
     </fragment>
 
     <fragment
@@ -26,7 +23,15 @@
         <action
             android:id="@+id/action_artistListFragment_to_artistDetailFragment"
             app:destination="@id/artistDetailFragment" />
+        <action
+            android:id="@+id/action_artistListFragment_to_prizeCreateFragment"
+            app:destination="@id/prizeCreateFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/prizeCreateFragment"
+        android:name="com.example.viniloapp.ui.prizes.PrizeCreateFragment"
+        android:label="Crear Premio" />
 
     <fragment
         android:id="@+id/navigation_collectors"

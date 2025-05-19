@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.viniloapp.R
@@ -20,7 +21,7 @@ class ArtistListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ArtistsAdapter
     private lateinit var progressBar: View
-    private lateinit var fabCreatePrize: View
+    private lateinit var buttonCreatePrize: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +47,8 @@ class ArtistListFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.artists_recycler_view)
         progressBar = view.findViewById(R.id.progress_bar)
-        fabCreatePrize = view.findViewById(R.id.fab_create_prize)
-        fabCreatePrize.setOnClickListener {
+        buttonCreatePrize = view.findViewById(R.id.button_create_prize)
+        buttonCreatePrize.setOnClickListener {
             findNavController().navigate(R.id.action_artistListFragment_to_prizeCreateFragment)
         }
 
@@ -77,13 +78,12 @@ class ArtistListFragment : Fragment() {
             }
         }
 
-        fabCreatePrize.setOnClickListener {
-            showCreatePrizeDialog()
+        buttonCreatePrize.setOnClickListener {
+            findNavController().navigate(R.id.action_artistListFragment_to_prizeCreateFragment)
         }
 
         Log.d("ArtistListFragment", "Loading artists")
         viewModel.loadArtists()
     }
-
 
 }

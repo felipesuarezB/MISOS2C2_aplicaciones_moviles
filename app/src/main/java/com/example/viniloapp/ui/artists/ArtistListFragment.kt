@@ -47,6 +47,9 @@ class ArtistListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.artists_recycler_view)
         progressBar = view.findViewById(R.id.progress_bar)
         fabCreatePrize = view.findViewById(R.id.fab_create_prize)
+        fabCreatePrize.setOnClickListener {
+            findNavController().navigate(R.id.action_artistListFragment_to_prizeCreateFragment)
+        }
 
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = ArtistsAdapter()
@@ -82,51 +85,5 @@ class ArtistListFragment : Fragment() {
         viewModel.loadArtists()
     }
 
-    private fun showCreatePrizeDialog() {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_create_prize, null)
-        val imageUrlEditText = dialogView.findViewById<android.widget.EditText>(R.id.editTextPrizeImageUrl)
-        val nameEditText = dialogView.findViewById<android.widget.EditText>(R.id.editTextPrizeName)
-        val descriptionEditText = dialogView.findViewById<android.widget.EditText>(R.id.editTextPrizeDescription)
-        val organizationEditText = dialogView.findViewById<android.widget.EditText>(R.id.editTextPrizeOrganization)
-        val createButton = dialogView.findViewById<android.widget.Button>(R.id.buttonCreatePrize)
 
-        val alertDialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .create()
-
-        createButton.setOnClickListener {
-            val name = nameEditText.text.toString()
-            val description = descriptionEditText.text.toString()
-            val organization = organizationEditText.text.toString()
-
-            if (name.isBlank() || description.isBlank() || organization.isBlank()) {
-                Toast.makeText(requireContext(), "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // Llamar al backend para crear el premio
-            createPrizeOnBackend(name, description, organization, alertDialog)
-        }
-
-        alertDialog.show()
-    }
-
-    private fun createPrizeOnBackend(name: String, description: String, organization: String, alertDialog: androidx.appcompat.app.AlertDialog) {
-        // Usar corrutinas para llamada de red
-        kotlinx.coroutines.GlobalScope.launch(kotlinx.coroutines.Dispatchers.Main) {
-            try {
-                val jsonBody = org.json.JSONObject()
-                jsonBody.put("name", name)
-                jsonBody.put("description", description)
-                jsonBody.put("organization", organization)
-
-                val response = com.example.viniloapp.network.NetworkServiceAdapter.getInstance(requireContext())
-                    .post("prizes", jsonBody)
-                Toast.makeText(requireContext(), "Premio creado exitosamente", Toast.LENGTH_LONG).show()
-                alertDialog.dismiss()
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error al crear el premio: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
 }

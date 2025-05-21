@@ -9,21 +9,21 @@
         android:id="@+id/editTextPrizeName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre del premio" />
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:inputType="textCapWords"
         android:hint="Nombre del premio" />
 
     <EditText
         android:id="@+id/editTextPrizeDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textMultiLine|textCapSentences"
         android:hint="Descripción del premio" />
 
     <EditText
         android:id="@+id/editTextPrizeOrganization"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textCapWords"
         android:hint="Organización" />
 
     <Button

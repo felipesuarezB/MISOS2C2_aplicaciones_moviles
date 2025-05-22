@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textCapWords"
+        android:minHeight="50dp"
         android:hint="Nombre del premio" />
 
     <EditText
@@ -17,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine|textCapSentences"
+        android:minHeight="50dp"
         android:hint="Descripción del premio" />
 
     <EditText
@@ -24,11 +26,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textCapWords"
+        android:minHeight="50dp"
         android:hint="Organización" />
 
     <Button
         android:id="@+id/buttonCreatePrize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="50dp"
         android:text="Crear premio" />
 </LinearLayout>

@@ -58,7 +58,7 @@ class CollectorDetailFragment: Fragment() {
         albumsRecyclerView.adapter = collectorAlbumAdapter
 
         viewModel.loadCollectorDetail(collectorId)
-        Log.d("CollectorDetails", "SYNC");
+        Log.d("CollectorDetails", "SYNC")
 
         viewModel.collectorDetail.observe(viewLifecycleOwner, Observer { collectorDetail ->
             collectorDetail?.let {

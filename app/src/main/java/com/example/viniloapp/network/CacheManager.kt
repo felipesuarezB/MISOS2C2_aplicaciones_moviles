@@ -80,7 +80,7 @@ class CacheManager(context: Context) {
     }
 
     fun clearAlbumCache() {
-        albums = null;
+        albums = null
     }
 
     // Artist caching

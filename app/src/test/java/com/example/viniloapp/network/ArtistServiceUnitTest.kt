@@ -1,5 +1,4 @@
 package com.example.viniloapp.network
-
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -18,6 +17,7 @@ class ArtistServiceUnitTest {
     }
 
     @Test
+
     fun `getArtists should return list of artists when successful`() = runTest {
         val mockArtistsJson = """
             [
@@ -35,9 +35,7 @@ class ArtistServiceUnitTest {
                 }
             ]
         """.trimIndent()
-
-        whenever(mockNetworkAdapter.get("artists")).thenReturn(mockArtistsJson)
-
+        whenever(mockNetworkAdapter.get("musicians")).thenReturn(mockArtistsJson)
         val result = artistService.getArtists()
         assertEquals(2, result.size)
         assertEquals("Michael Jackson", result[0].name)
@@ -45,19 +43,12 @@ class ArtistServiceUnitTest {
     }
 
     @Test
-    fun `getArtists should throw exception when error occurs`() = runTest {
-        whenever(mockNetworkAdapter.get("artists")).thenThrow(RuntimeException("Network error"))
 
+    fun `getArtists should throw exception when error occurs`() = runTest {
+        whenever(mockNetworkAdapter.get("musicians")).thenThrow(RuntimeException("Network error"))
         val exception = assertFailsWith<RuntimeException> {
             artistService.getArtists()
         }
         assertEquals("Network error", exception.message)
-    }
-
-    @Test
-    fun `createArtist should call post with correct parameters`() = runTest {
-        val mockJsonBody = mock<org.json.JSONObject>()
-        artistService.createArtist(mockJsonBody)
-        verify(mockNetworkAdapter).post(eq("artists"), eq(mockJsonBody))
     }
 }

@@ -8,16 +8,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.android.volley.VolleyError
-import com.example.viniloapp.models.CollectorDetail
-import com.example.viniloapp.repositories.CollectorRepository
+import com.example.viniloapp.models.Artist
+import com.example.viniloapp.repositories.ArtistRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class CollectorDetailViewModel(application: Application) : AndroidViewModel(application) {
-    private val _collectorDetail = MutableLiveData<CollectorDetail>()
-    val collectorDetail: LiveData<CollectorDetail> = _collectorDetail
+class ArtistDetailViewModel(application: Application) : AndroidViewModel(application) {
+    private val _artistDetail = MutableLiveData<Artist>()
+    val artistDetail: LiveData<Artist> = _artistDetail
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -27,41 +27,44 @@ class CollectorDetailViewModel(application: Application) : AndroidViewModel(appl
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-    private val collectorRepository = CollectorRepository(application)
+    private val artistRepository = ArtistRepository(application)
 
     init {
-        Log.d("CollectorDetailViewModel", "Initializing view model")
+        Log.d("ArtistDetailViewModel", "Initializing view model")
     }
 
-    fun loadCollectorDetail(collectorId: Int) {
+    fun loadArtistDetail(artistId: Int) {
         _isLoading.value = true
         _error.value = ""
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val collector = collectorRepository.getCollectorDetail(collectorId)
-                _collectorDetail.postValue(collector)
+                val artistDetail = artistRepository.getArtistDetail(artistId)
+                _artistDetail.postValue(artistDetail)
             } catch (e: VolleyError) {
-                Log.e("CollectorDetailViewModel", e.toString())
-                _error.postValue("Error desconocido al cargar el coleccionista $e")
-
+                Log.e("ArtistDetailViewModel", "Error loading artist detail", e)
+                _error.postValue("Error al cargar el artista: ${e.message}")
             } catch (e: Exception) {
-                Log.e("CollectorDetailViewModel", e.toString())
-                _error.postValue("Error desconocido al cargar el coleccionista")
+                Log.e("ArtistDetailViewModel", "Error loading artist detail", e)
+                _error.postValue("Error desconocido al cargar el artista")
             } finally {
                 _isLoading.postValue(false)
             }
-
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 
     class Factory(private val application: Application) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(CollectorDetailViewModel::class.java)) {
-                return CollectorDetailViewModel(application) as T
+            if (modelClass.isAssignableFrom(ArtistDetailViewModel::class.java)) {
+                return ArtistDetailViewModel(application) as T
             }
             throw IllegalArgumentException("Unknown viewModel Class")
         }
     }
-}
+} 

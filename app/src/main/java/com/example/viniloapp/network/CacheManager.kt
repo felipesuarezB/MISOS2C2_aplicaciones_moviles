@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.LruCache
 import com.example.viniloapp.models.Album
 import com.example.viniloapp.models.AlbumDetail
+import com.example.viniloapp.models.Artist
 import com.example.viniloapp.models.Collector
 import com.example.viniloapp.models.CollectorDetail
 
@@ -79,7 +80,39 @@ class CacheManager(context: Context) {
     }
 
     fun clearAlbumCache() {
-        albums = null;
+        albums = null
     }
 
+    // Artist caching
+    private var artistDetail: LruCache<Int, Artist> = LruCache(3)
+    fun cacheArtistDetail(artistId: Int, artist: Artist) {
+        if (artistDetail[artistId] == null) {
+            artistDetail.put(artistId, artist)
+        }
+    }
+
+    fun getArtistDetail(artistId: Int): Artist? {
+        return artistDetail[artistId]
+    }
+
+    private var cacheArtistsMilliseconds: Long = 0L
+    private var artists: List<Artist>? = null
+    fun cacheArtists(artists: List<Artist>) {
+        cacheArtistsMilliseconds = System.currentTimeMillis()
+        this.artists = artists
+    }
+
+    fun getArtists(): List<Artist>? {
+        val now = System.currentTimeMillis()
+        return if (now - cacheArtistsMilliseconds < cacheDurationMillis) {
+            artists
+        } else {
+            artists = null
+            null
+        }
+    }
+
+    fun clearArtistCache() {
+        artists = null
+    }
 }

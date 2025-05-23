@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
-            name="albumDetail"
-            type="com.example.viniloapp.models.AlbumDetail" />
+            name="artist"
+            type="com.example.viniloapp.models.Artist" />
     </data>
 
     <ScrollView
@@ -35,21 +36,21 @@
                 app:cardElevation="0dp">
 
                 <ImageView
-                    android:id="@+id/album_cover"
+                    android:id="@+id/artist_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    android:contentDescription='@{"Portada del album " + albumDetail.name}'
-                    app:imageUrl='@{albumDetail.cover}' />
+                    android:contentDescription="@string/artist_image"
+                    app:imageUrl='@{artist.image}' />
 
             </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/album_name"
+                android:id="@+id/artist_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{albumDetail.name}'
+                android:text='@{artist.name}'
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="#333333"
@@ -57,37 +58,19 @@
                 android:layout_marginBottom="16dp"/>
 
             <TextView
-                android:id="@+id/album_genre"
+                android:id="@+id/artist_birthDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{"Género: " + albumDetail.genre}'
+                android:text='@{"Fecha de nacimiento: " + artist.birthDate}'
                 android:textSize="18sp"
                 android:textColor="#000000"
                 android:layout_marginBottom="12dp"/>
 
             <TextView
-                android:id="@+id/album_release_date"
+                android:id="@+id/artist_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{"Fecha de lanzamiento: " + albumDetail.releaseDate}'
-                android:textSize="18sp"
-                android:textColor="#000000"
-                android:layout_marginBottom="12dp"/>
-
-            <TextView
-                android:id="@+id/album_record_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text='@{"Sello discográfico: " + albumDetail.recordLabel}'
-                android:textSize="18sp"
-                android:textColor="#000000"
-                android:layout_marginBottom="16dp"/>
-
-            <TextView
-                android:id="@+id/album_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text='@{albumDetail.description}'
+                android:text='@{artist.description}'
                 android:textSize="16sp"
                 android:textColor="#000000"
                 android:layout_marginBottom="16dp"/>
@@ -95,20 +78,38 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Canciones:"
+                android:text="Álbumes:"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/tracksRecyclerView"
+                android:id="@+id/albumsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="true"
                 android:overScrollMode="never"
                 android:layout_marginBottom="16dp"
-                android:minHeight="200dp"/>
+                android:minHeight="150dp"/>
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Premios:"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/prizesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="true"
+                android:overScrollMode="never"
+                android:layout_marginBottom="16dp"
+                android:minHeight="100dp"/>
 
         </LinearLayout>
     </ScrollView>

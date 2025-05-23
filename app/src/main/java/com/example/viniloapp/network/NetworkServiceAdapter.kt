@@ -13,9 +13,10 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
-class NetworkServiceAdapter constructor(context: Context) {
+class NetworkServiceAdapter(context: Context) {
     companion object {
-        const val BASE_URL = "https://backvynils-q6yc.onrender.com/"
+        // const val BASE_URL = "http://backvynils-q6yc.onrender.com/"
+        const val BASE_URL = "http://192.168.1.6:3000/"
         var instance: NetworkServiceAdapter? = null
         fun getInstance(context: Context) =
             instance ?: synchronized(this) {
@@ -52,7 +53,7 @@ class NetworkServiceAdapter constructor(context: Context) {
                 { response -> cont.resume(response) },
                 { error -> cont.resumeWithException(error) }
             )
-        );
+        )
     }
 
 }

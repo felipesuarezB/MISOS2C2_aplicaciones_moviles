@@ -14,7 +14,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nombre del álbum"
-            android:layout_marginBottom="8dp">
+
+            android:layout_marginBottom="8dp"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/white"
+            android:textColorHint="@color/hint_contrast">
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAlbumName"
@@ -27,7 +34,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="URL de la portada"
-            android:layout_marginBottom="8dp">
+
+            android:layout_marginBottom="8dp"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/white"
+            android:textColorHint="@color/hint_contrast">
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAlbumCover"
@@ -41,7 +55,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Fecha de lanzamiento (YYYY-MM-DD)"
-            android:layout_marginBottom="8dp">
+
+            android:layout_marginBottom="8dp"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/white"
+            android:textColorHint="@color/hint_contrast">
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAlbumReleaseDate"
@@ -54,7 +75,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Descripción"
-            android:layout_marginBottom="8dp">
+
+            android:layout_marginBottom="8dp"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/white"
+            android:textColorHint="@color/hint_contrast">
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAlbumDescription"
@@ -68,7 +96,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Género"
-            android:layout_marginBottom="8dp">
+
+            android:layout_marginBottom="8dp"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/white"
+            android:textColorHint="@color/hint_contrast">
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAlbumGenre"
@@ -81,7 +116,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Sello discográfico"
-            android:layout_marginBottom="8dp">
+
+            android:layout_marginBottom="8dp"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="@color/white"
+            android:textColorHint="@color/hint_contrast">
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAlbumRecordLabel"

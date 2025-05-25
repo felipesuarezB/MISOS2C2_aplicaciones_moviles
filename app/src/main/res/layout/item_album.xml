@@ -30,6 +30,9 @@
                     android:id="@+id/album_cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+
+                    android:contentDescription='@{ "Portada del album " + album.name}'
+
                     android:scaleType="centerCrop"
                     app:imageUrl="@{album.cover}" />
 
@@ -65,7 +68,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:textSize="14sp"
-                    android:textColor="#BDBDBD"
+
+
                     android:text="@{album.genre}" />
 
             </LinearLayout>

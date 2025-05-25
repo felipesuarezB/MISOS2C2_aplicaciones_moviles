@@ -3,4 +3,7 @@
     <string name="title_artists">Artistas</string>
     <string name="title_albums">Albums</string>
     <string name="title_collectors">Coleccionistas</string>
+    <string name="artist_image">Artist Image</string>
+    <string name="album_cover">Album Cover</string>
+    <string name="crear_premio">Crear premio</string>
 </resources>

@@ -35,16 +35,18 @@ class VinilosE2ETests {
             .perform(click())
 
         onView(withId(R.id.albums_recycler_view))
-            .check(matches(hasDescendant(withText("Buscando América Prueba"))));
+
+            .check(matches(hasDescendant(withText("Poeta del pueblo"))));
+
 
         Thread.sleep(5000)
         onView(withId(R.id.albums_recycler_view))
             .perform(
                 RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-                    hasDescendant(withText("Don gato"))
+                    hasDescendant(withText("Poeta del pueblo"))
                 )
             )
-        onView(withText("Don gato"))
+        onView(withText("Poeta del pueblo"))
             .check(matches(isDisplayed()))
     }
 
@@ -58,11 +60,11 @@ class VinilosE2ETests {
         onView(withId(R.id.collectors_recycler_view))
             .perform(
                 RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-                    hasDescendant(withText("Gerardo"))
+                    hasDescendant(withText("Manolo Bellon"))
                 )
             )
 
-        onView(withText("Gerardo"))
+        onView(withText("Manolo Bellon"))
             .check(matches(isDisplayed()))
     }
 
@@ -76,20 +78,22 @@ class VinilosE2ETests {
         onView(withId(R.id.collectors_recycler_view))
             .perform(
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                    hasDescendant(withText("Jose Ortegon")),
+
+                    hasDescendant(withText("Manolo Bellon")),
+
                     click()
                 )
             )
 
         Thread.sleep(5000)
         onView(withId(R.id.collector_detail_name))
-            .check(matches(withText("Name: Jose Ortegon")))
+            .check(matches(withText("Name: Manolo Bellon")))
 
         onView(withId(R.id.collector_correo))
-            .check(matches(withText("Email: jose@gmail.com")))
+            .check(matches(withText("Email: manollo@caracol.com.co")))
 
         onView(withId(R.id.collector_telefono))
-            .check(matches(withText("Phone: 12345678")))
+            .check(matches(withText("Phone: 3502457896")))
     }
 
     @Test
@@ -119,7 +123,9 @@ class VinilosE2ETests {
         onView(withId(R.id.albums_recycler_view))
             .perform(
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                    hasDescendant(withText("Buscando América Prueba")),
+
+                    hasDescendant(withText("Poeta del pueblo")),
+
                     click()
                 )
             )
@@ -132,6 +138,57 @@ class VinilosE2ETests {
 
         onView(withId(R.id.album_genre))
             .check(matches(withText("Género: Salsa")))
+    }
 
+    @Test
+    fun listArtist() {
+        Thread.sleep(5000)
+        onView(withId(R.id.navigation_artists))
+            .perform(click())
+
+        Thread.sleep(5000)
+        onView(withId(R.id.artists_recycler_view))
+            .perform(
+                RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
+                    hasDescendant(withText("Rubén Blades Bellido de Luna"))
+                )
+            )
+
+        onView(withText("Rubén Blades Bellido de Luna"))
+            .check(matches(isDisplayed()))
+
+    }
+
+    @Test
+    fun detalleArtista(){
+        Thread.sleep(5000)
+        // Navegar a la sección de álbumes
+        onView(withId(R.id.navigation_artists)).perform(click())
+        Thread.sleep(2000)
+        onView(withId(R.id.artists_recycler_view))
+            .perform(
+                RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                    hasDescendant(withText("Rubén Blades Bellido de Luna")),
+                    click()
+                )
+            )
+        Thread.sleep(5000)
+        onView(withId(R.id.artist_name))
+            .check(matches(withText("Rubén Blades Bellido de Luna")))
+    }
+
+    @Test
+    fun createPremio() {
+        Thread.sleep(5000)
+        // Navegar a la sección de álbumes
+        onView(withId(R.id.navigation_artists)).perform(click())
+        Thread.sleep(2000)
+        // Oprimir el botón de crear álbum
+        onView(withId(R.id.button_create_prize)).perform(click())
+        Thread.sleep(2000)
+        // Validar que los campos requeridos existen en el formulario
+        onView(withId(R.id.editTextPrizeName)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextPrizeDescription)).check(matches(isDisplayed()))
+        onView(withId(R.id.editTextPrizeOrganization)).check(matches(isDisplayed()))
     }
 }

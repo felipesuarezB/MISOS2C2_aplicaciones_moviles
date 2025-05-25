@@ -40,7 +40,9 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
+
                     android:contentDescription='@{"Portada del album " + albumDetail.name}'
+
                     app:imageUrl='@{albumDetail.cover}' />
 
             </androidx.cardview.widget.CardView>

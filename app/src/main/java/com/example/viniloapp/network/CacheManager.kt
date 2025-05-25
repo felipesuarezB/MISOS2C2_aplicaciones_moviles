@@ -5,6 +5,7 @@ import android.util.LruCache
 import com.example.viniloapp.models.Album
 import com.example.viniloapp.models.AlbumDetail
 import com.example.viniloapp.models.Artist
+
 import com.example.viniloapp.models.Collector
 import com.example.viniloapp.models.CollectorDetail
 
@@ -80,6 +81,7 @@ class CacheManager(context: Context) {
     }
 
     fun clearAlbumCache() {
+
         albums = null
     }
 
@@ -115,4 +117,5 @@ class CacheManager(context: Context) {
     fun clearArtistCache() {
         artists = null
     }
+
 }

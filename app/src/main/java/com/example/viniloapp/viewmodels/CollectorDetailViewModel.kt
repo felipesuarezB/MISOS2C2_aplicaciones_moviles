@@ -43,7 +43,9 @@ class CollectorDetailViewModel(application: Application) : AndroidViewModel(appl
                 _collectorDetail.postValue(collector)
             } catch (e: VolleyError) {
                 Log.e("CollectorDetailViewModel", e.toString())
+
                 _error.postValue("Error desconocido al cargar el coleccionista $e")
+
 
             } catch (e: Exception) {
                 Log.e("CollectorDetailViewModel", e.toString())

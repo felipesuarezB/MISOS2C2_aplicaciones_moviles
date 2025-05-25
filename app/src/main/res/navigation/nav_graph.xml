@@ -63,6 +63,7 @@
         android:name="com.example.viniloapp.ui.albums.AlbumCreateFragment"
         android:label="Crear Álbum" />
 
+
     <fragment
         android:id="@+id/artistDetailFragment"
         android:name="com.example.viniloapp.ui.artists.ArtistDetailFragment"
@@ -71,5 +72,6 @@
             android:name="artistId"
             app:argType="integer" />
     </fragment>
+
 
 </navigation> 

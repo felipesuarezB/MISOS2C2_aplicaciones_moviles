@@ -53,7 +53,9 @@ class NetworkServiceAdapter(context: Context) {
                 { response -> cont.resume(response) },
                 { error -> cont.resumeWithException(error) }
             )
+
         )
+
     }
 
 }

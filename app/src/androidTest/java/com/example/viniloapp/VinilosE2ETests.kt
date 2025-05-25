@@ -35,7 +35,9 @@ class VinilosE2ETests {
             .perform(click())
 
         onView(withId(R.id.albums_recycler_view))
+
             .check(matches(hasDescendant(withText("Poeta del pueblo"))));
+
 
         Thread.sleep(5000)
         onView(withId(R.id.albums_recycler_view))
@@ -76,7 +78,9 @@ class VinilosE2ETests {
         onView(withId(R.id.collectors_recycler_view))
             .perform(
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+
                     hasDescendant(withText("Manolo Bellon")),
+
                     click()
                 )
             )
@@ -119,7 +123,9 @@ class VinilosE2ETests {
         onView(withId(R.id.albums_recycler_view))
             .perform(
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+
                     hasDescendant(withText("Poeta del pueblo")),
+
                     click()
                 )
             )
@@ -150,6 +156,7 @@ class VinilosE2ETests {
 
         onView(withText("Rubén Blades Bellido de Luna"))
             .check(matches(isDisplayed()))
+
     }
 
     @Test

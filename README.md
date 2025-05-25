@@ -116,6 +116,30 @@ El proyecto incluye pruebas unitarias y pruebas de UI. Para ejecutarlas:
 3. **Error de Build**
    - Verifica que todas las dependencias estén correctamente configuradas
    - Asegúrate de tener suficiente memoria RAM asignada a Gradle
+ 
+4. **Error de backend**
+
+   **MAC**
+   - Clonar el repositorio del backend que se encuentra en el siguiente link : `https://github.com/TheSoftwareDesignLab/BackVynils`
+   - Con el  comando `docker-compose up`  desplegar los docker configurados en el backend.
+   - Verificar que exista conexión a `http://127.0.0.1:3000/`
+   - En el archivo Android Manifest verificar que exista la linea `android:networkSecurityConfig="@xml/network_security_config"`
+   - Verificar que en la ruta de archivos *res* en la carpeta de `xml` exista un archivo llamado `network_security_config.xml`
+   - Abrir la terminal de comandos e introducir el comando `ifconfig`
+   - Buscar la `Broadcast` IP. Debe verse de la sigueinte manera 	`inet 192.168.1.6 netmask 0xffffff00 broadcast 192.168.1.255`
+   - En el archivo *NetworkServiceAdapter.kt* descomentar la línea y cambiar la IP por la que obtuvo en el paso anterior `const val BASE_URL = "http://192.168.1.6:3000/"`
+   - En el archivo *NetworkServiceAdapter.kt* comentar la línea `const val BASE_URL = "http://backvynils-q6yc.onrender.com/"`
+   - Correr Nuevamente ek proyecto. Ahora el backend apuntará al repositorio local.
+
+   **WINDOWS**
+   - Clonar el repositorio del backend que se encuentra en el siguiente link : `https://github.com/TheSoftwareDesignLab/BackVynils`
+   - Con el  comando `docker-compose up`  desplegar los docker configurados en el backend.
+   - Verificar que exista conexión a `http://127.0.0.1:3000/`
+   - En el archivo Android Manifest verificar que exista la linea `android:networkSecurityConfig="@xml/network_security_config"`
+   - Verificar que en la ruta de archivos *res* en la carpeta de `xml` exista un archivo llamado `network_security_config.xml`
+   - En el archivo *NetworkServiceAdapter.kt* descomentar la línea `const val BASE_URL = "http://10.0.2.2:3000/"`
+   - En el archivo *NetworkServiceAdapter.kt* comentar la línea `const val BASE_URL = "http://backvynils-q6yc.onrender.com/"`
+   - Correr Nuevamente ek proyecto. Ahora el backend apuntará al repositorio local.
 
 ## 📝 Notas Adicionales
 
